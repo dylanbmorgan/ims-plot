@@ -13,6 +13,7 @@ These aromatic switching molecules are of interest as they could
 potentially be used for degradation-resistant electrodes in sodium ion
 batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 <br  />
+<br  />
 
 <img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/ACID_plan.png" width="300"> 
 
