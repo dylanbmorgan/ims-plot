@@ -12,6 +12,38 @@ anti-aromaticity (figure 2).<sup>5</sup>
 These aromatic switching molecules are of interest as they could
 potentially be used for degradation-resistant electrodes in sodium ion
 batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
+<br  />
+
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/ACID_plan.png" width="300"> 
+
+*Figure 1*
+<br  />
+<br  />
+
+
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/NICS_plan.png" width="300">
+
+*Figure 2* 
+<br  />
+<br  />
+
+**Aims & Objectives**<br  />
+* Create a process that will enable clear visualisation of macrocycles switching between aromatic and anti-aromatic in 1D, 2D, and ultimately 3D<br  />
+* Enable areas of negative and positive NMR chemical shift to be shown by a plot generated from the process<br  />
+  * Based off of NICS method<br  />
+  * If aromatic, centre of molecule will be shown as negative chemical shift whilst outside is positive. Achieved via a isocontour plot<br  />
+  * Vice-versa for anti-aromatic molecules<br  />
+* Will be able to visualise macrocycles which have individual aromatic components but the entire molecule is anti-aromatic and observe the difference<br  />
+<br  />
+
+**References**
+1. H. Fliegl, S. Taubert, O. Lehtonen and D. Sundholm, *Phys. Chem. Chem. Phys.*, 2011, **13**, 20500–20518.
+1. D. Geuenich, K. Hess, F. Köhler and R. Herges, *J. Am. Chem. Soc.*, 2005, **105**, 3758–3772.
+1. Z. Chen, C. S. Wannere, C. Corminboeuf, R. Puchta, P. Von and R. Schleyer, *J. Am. Chem. Soc.*, 2005, **105**, 3842–3888.
+1. S. Eder, D. Yoo, W. Nogala, M. Pletzer, A. Santana Bonilla, A. J. P. White, K. E. Jelfs, M. Heeney, J. W. Choi and F. Alöcklhofer, *Angew. Chemie Int. Ed.*, 2020, **59**, 12958–12964.
+1. V. Vijay, M. Madhu, R. Ramakrishnan, A. Benny and M. Hariharan, *Chem. Commun.*, 2019, **56**, 225–228.
+1. O. El Bakouri, J. R. Smith and H. Ottosson, *J. Am. Chem. Soc.*, 2020, **142**, 5602–5617.
+<br  />
 
 
 Student: Dylan Morgan
