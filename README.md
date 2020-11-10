@@ -26,7 +26,6 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 
 *Figure 2* 
 <br  />
-<br  />
 
 # Aims & Objectives
 * Create a process that will enable clear visualisation of macrocycles switching between aromatic and anti-aromatic in 1D, 2D, and ultimately 3D<br  />
