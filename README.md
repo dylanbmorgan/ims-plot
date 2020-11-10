@@ -35,6 +35,7 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
   * Vice-versa for anti-aromatic molecules<br  />
 * Will be able to visualise macrocycles which have individual aromatic components but the entire molecule is anti-aromatic and observe the difference<br  />
 <br  />
+<br  />
 
 # References
 1. H. Fliegl, S. Taubert, O. Lehtonen and D. Sundholm, *Phys. Chem. Chem. Phys.*, 2011, **13**, 20500–20518.
