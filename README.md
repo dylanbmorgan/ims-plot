@@ -53,5 +53,7 @@ Student: Dylan Morgan
 
 Supervisor: Dr Felix Plasser
 
+Research Group: https://fplasser.sci-public.lboro.ac.uk/
+
 Institution: Loughborough University
 
