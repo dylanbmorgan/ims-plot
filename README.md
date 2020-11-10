@@ -33,7 +33,7 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 * Create a process that will enable clear visualisation of macrocycles switching between aromatic and anti-aromatic in 1D, 2D, and ultimately 3D<br  />
 * Enable areas of negative and positive NMR chemical shift to be shown by a plot generated from the process<br  />
   * Based off of NICS method<br  />
-  * If aromatic, centre of molecule will be shown as negative chemical shift whilst outside is positive. Achieved via a isocontour plot<br  />
+  * If aromatic, centre of molecule will be shown as negative chemical shift whilst outside is positive. Achieved via an isocontour plot<br  />
   * Vice-versa for anti-aromatic molecules<br  />
 * Will be able to visualise macrocycles which have individual aromatic components but the entire molecule is anti-aromatic and observe the difference<br  />
 <br  />
