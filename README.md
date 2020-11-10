@@ -28,7 +28,7 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 <br  />
 <br  />
 
-**Aims & Objectives**<br  />
+# Aims & Objectives
 * Create a process that will enable clear visualisation of macrocycles switching between aromatic and anti-aromatic in 1D, 2D, and ultimately 3D<br  />
 * Enable areas of negative and positive NMR chemical shift to be shown by a plot generated from the process<br  />
   * Based off of NICS method<br  />
@@ -37,7 +37,7 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 * Will be able to visualise macrocycles which have individual aromatic components but the entire molecule is anti-aromatic and observe the difference<br  />
 <br  />
 
-**References**
+# References
 1. H. Fliegl, S. Taubert, O. Lehtonen and D. Sundholm, *Phys. Chem. Chem. Phys.*, 2011, **13**, 20500–20518.
 1. D. Geuenich, K. Hess, F. Köhler and R. Herges, *J. Am. Chem. Soc.*, 2005, **105**, 3758–3772.
 1. Z. Chen, C. S. Wannere, C. Corminboeuf, R. Puchta, P. Von and R. Schleyer, *J. Am. Chem. Soc.*, 2005, **105**, 3842–3888.
