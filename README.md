@@ -36,6 +36,8 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
   * If aromatic, centre of molecule will be shown as negative chemical shift whilst outside is positive. Achieved via a isocontour plot<br  />
   * Vice-versa for anti-aromatic molecules<br  />
 * Will be able to visualise macrocycles which have individual aromatic components but the entire molecule is anti-aromatic and observe the difference<br  />
+<br  />
+
 
 # References
 1. H. Fliegl, S. Taubert, O. Lehtonen and D. Sundholm, *Phys. Chem. Chem. Phys.*, 2011, **13**, 20500–20518.
