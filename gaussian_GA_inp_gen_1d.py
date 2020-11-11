@@ -1,63 +1,59 @@
-"""
-Generates ghost atoms for NICS calculations of aromatic compounds for Gaussian 
 
-Prerequisits:
-    Molecule must be aligned with z-plane 
-"""
+def preamble_func():
+
+    preamble = """
+    Generates ghost atoms for NICS calculations of aromatic compounds for Gaussian 
+
+    Key (in order of appearance):
+        Bq = ghost atoms 
+        coor = coordinates 
+
+    Prerequisits:
+        Molecule must be aligned with origin
+    """
+
+    print(preamble)
 
 
 import numpy as np
 
 
-def input_params():
-    """
-    asks usr for input file name and ghost atom parameters (start, end, spacings)
-    generates list of z coordinates for GAs
-    appends list with x and y coordinates 
-    """
+def enter_Bq_coor():
 
-    file_name = input("Type the name of the input file to be appended: ")
+    print("Enter coordinates (x, y, z) for desired ghost atoms (without any separation between coordinates)")
+    print("Press 'enter' to enter next coordinate")
+    print("Press 'f + enter' when finished:")
 
-    ga_no_start = int(input("What is the start coordinate for the GAs? "))
-    ga_no_end = int(input("What is the end coordinate for the GAs? "))
-    ga_spacing = float(input("What are the vecotr spacings between GAs? "))
+    ga_coor_list = []
 
-    ga_list = np.arange(ga_no_start, ga_no_end + ga_spacing, ga_spacing).tolist()
+    while True:
+        ga_coor = input()
 
-    return file_name, ga_list
+        if ga_coor != "f":
+            ga_coor_list.append(float(ga_coor))
 
+        else:
+            break    
+
+    print(ga_coor_list)
+
+"""
+    def check():
+
+        cont = input("Proceed (y/n)? ".lower())
+
+        if cont == y:
+            append_input_file_v2()
         
+        elif cont == n:
+            enter_Bq_coor()
 
-def append_input_file(file_name, ga_list):
-    """
-    appends the Gaussian input file with ghost atoms
-    checks to see if file is empty
-    iterate over each string in a list
-    if not empty, will add input as new line
-    other lines will append new line at the end of preceding line
-
-    modified from: https://thispointer.com/how-to-append-text-or-lines-to-a-file-in-python/ (accessed 06/11/2020)
-    """
-
-    with open(file_name, "a+") as file_object:
-        append_eol = False
-
-        file_object.seek(0)
-        data = file_object.read(100)
-
-        if len(data) > 0:
-            append_eol = True
-
-        for line in lines_to_append:
-            if append_eol == True:
-                file_object.write("/n") 
-
-            else:
-                append_eol = True
-
-            file_object.write(line)
-
+        else:
+            print("Not a valid answer.")
+            check()
+"""
 
 if __name__ == "__main__":
-    input_params()
-    append_input_file()
+    preamble_func()
+    enter_Bq_coor()
+    #append_input_file_v2()
