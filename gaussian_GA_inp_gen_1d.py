@@ -2,58 +2,83 @@
 def preamble_func():
 
     preamble = """
-    Generates ghost atoms for NICS calculations of aromatic compounds for Gaussian 
+    Easy way to add ghost atoms to end of Gaussian input (.com) file
 
-    Key (in order of appearance):
-        Bq = ghost atoms 
-        coor = coordinates 
+    Key (in alphabetical order): 
+        'bq' = ghost atoms 
+        'coor(s)' = coordinates 
+        'func' = function
+        'inp' = input
+        'usr' = user
+        'wf' = write file
 
     Prerequisits:
-        Molecule must be aligned with origin
+        Molecule must already be aligned with origin
+        (Optional) molecule geometry already optimised 
     """
 
     print(preamble)
 
+def enter_bq_coor():
+    """
+    asks usr for coors for ghost atoms
+    generates a list containing usr defined Bq coordinates
+    prints list of coors 
+    asks usr to confirm coors
+    check() func allows usr to re-input coors or accept to add to inp file
+    """
 
-import numpy as np
+    print("\nEnter coordinates (x, y, z) for desired ghost atoms (separated by spaces).")
+    print("Press 'enter' to enter next coordinate.")
+    print("Press 'enter' again when finished:\n")
 
-
-def enter_Bq_coor():
-
-    print("Enter coordinates (x, y, z) for desired ghost atoms (without any separation between coordinates)")
-    print("Press 'enter' to enter next coordinate")
-    print("Press 'f + enter' when finished:")
-
-    ga_coor_list = []
+    each_coor = []
+    # list to hold Bq coordinates 
 
     while True:
-        ga_coor = input()
+        coor = input()
 
-        if ga_coor != "f":
-            ga_coor_list.append(float(ga_coor))
-
+        if coor != "":
+            each_coor.append(coor)
         else:
-            break    
+            break
 
-    print(ga_coor_list)
+    each_bq_coor = ["Bq " + coor for coor in each_coor]
 
-"""
+    print(*each_bq_coor, sep = '\n')
+
     def check():
+        cont = input("\nProceed (y/n)? ".lower())
 
-        cont = input("Proceed (y/n)? ".lower())
-
-        if cont == y:
-            append_input_file_v2()
-        
-        elif cont == n:
-            enter_Bq_coor()
-
+        if cont == "y" or cont == "yes":
+            append_input_file()
+        elif cont == "n" or cont == "no":
+            enter_bq_coor()
         else:
             print("Not a valid answer.")
             check()
+    
+    check()
+
+def append_input_file():
+    """
+    usr defines inp file to open
+    func writes previously generated coors to inp file
+    """
+
+    file_name = input("\nFile name:\n")
+
+    wf = open(file_name, "w")
+
+    for line in open(file_name, "r"):
+        wf.write(line)
+    
+    """
+    for istep in range(nsteps):
+        coor = start_vec + istep * inc_vec
 """
 
 if __name__ == "__main__":
     preamble_func()
-    enter_Bq_coor()
-    #append_input_file_v2()
+    enter_bq_coor()
+    append_input_file()
