@@ -57,3 +57,4 @@ Research Group: https://fplasser.sci-public.lboro.ac.uk/
 
 Institution: Loughborough University
 
+Copyright (C) 2020, Dylan Morgan and Felix Plasser
