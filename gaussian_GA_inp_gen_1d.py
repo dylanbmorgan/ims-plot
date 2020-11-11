@@ -2,19 +2,19 @@
 def preamble_func():
 
     preamble = """
-    Easy way to add ghost atoms to end of Gaussian input (.com) file
+Easy way to add ghost atoms to end of Gaussian input (.com) file
 
-    Key (in alphabetical order): 
-        'bq' = ghost atoms 
-        'coor(s)' = coordinates 
-        'func' = function
-        'inp' = input
-        'usr' = user
-        'wf' = write file
+Key (in alphabetical order): 
+    'bq' = ghost atoms 
+    'coor(s)' = coordinates 
+    'func' = function
+    'inp' = input
+    'usr' = user
+    'wf' = write file
 
-    Prerequisits:
-        Molecule must already be aligned with origin
-        (Optional) molecule geometry already optimised 
+Prerequisits:
+    Molecule must already be aligned with origin
+    (Optional) molecule geometry already optimised 
     """
 
     print(preamble)
