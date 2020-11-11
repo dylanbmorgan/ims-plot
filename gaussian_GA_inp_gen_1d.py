@@ -19,6 +19,7 @@ Prerequisits:
 
     print(preamble)
 
+
 def enter_bq_coor():
     """
     asks usr for coors for ghost atoms
@@ -43,12 +44,15 @@ def enter_bq_coor():
         else:
             break
 
+    global each_bq_coor
     each_bq_coor = ["Bq " + coor for coor in each_coor]
+    # new list to enable adddition of "Bq"
 
+    print("Output:")
     print(*each_bq_coor, sep = '\n')
 
     def check():
-        cont = input("\nProceed (y/n)? ".lower())
+        cont = input("\nProceed? (y/n) ")
 
         if cont == "y" or cont == "yes":
             append_input_file()
@@ -57,26 +61,29 @@ def enter_bq_coor():
         else:
             print("Not a valid answer.")
             check()
-    
+
     check()
+
 
 def append_input_file():
     """
+    assigns enter_bq_coor() to each_bq_coor variable
     usr defines inp file to open
     func writes previously generated coors to inp file
+    func add new line to end of file (to comply with Gaussian requiring blank empty line at end of file)
+    prints content of modified file
     """
 
     file_name = input("\nFile name:\n")
 
-    wf = open(file_name, "w")
+    with open(file_name, 'w') as gaus_file:
 
-    for line in open(file_name, "r"):
-        wf.write(line)
-    
-    """
-    for istep in range(nsteps):
-        coor = start_vec + istep * inc_vec
-"""
+        for coor in each_bq_coor:
+            gaus_file.write('%s\n' % coor)
+            
+        gaus_file.write('\n')
+        print(gaus_file.read())
+
 
 if __name__ == "__main__":
     preamble_func()
