@@ -17,6 +17,7 @@ class input_generator:
     Prerequisits:
         Molecule must already be aligned with origin
         (Optional) molecule geometry already optimised 
+        Coors must be given by usr as float
         """
 
         print(preamble)
@@ -68,26 +69,36 @@ class input_generator:
 
     def append_input_file(self):
         """
-        assigns enter_bq_coor() to each_bq_coor variable
-        usr defines inp file to open
-        func writes previously generated coors to inp file
-        func add new line to end of file (to comply with Gaussian requiring blank empty line at end of file)
-        prints content of modified file
+        asks usr for filename for original file name then asks for a name for a copy of the original file
+        copys contents of original file to copy
+        appends copied file with Bq atoms generated earlier
+        adds new line to end of file to comply with Gaussian input file requirements
+        opens copied file as read so usr can check it's been correctly generated 
         """
 
-        file_name = input("\nFile name:\n")
+        original_filename = input("\nFile name:\n")
+        copy_filename = input("\nName to save copy as:\n")
 
-        with open(file_name, 'w') as gaus_file:
+        with open(original_filename) as original:
+            with open(copy_filename, "w+") as copy:
 
-            for coor in self.each_bq_coor:
-                gaus_file.write('%s\n' % coor)
+                for line in original:
+                    copy.write(line)
 
-            gaus_file.write('\n')
-            #print(gaus_file.read())
+                for coor in self.each_bq_coor:
+                    copy.write('%s\n' % coor)
+
+        with open(copy_filename, "r") as copy:
+
+            if copy.mode == "r":
+                contents = copy.read()
+                print(contents)
+
+        exit()
 
 
 if __name__ == "__main__":
     ig = input_generator()
     ig.preamble_func()
     ig.enter_bq_coor()
-    #ig.append_input_file()
+    ig.append_input_file()
