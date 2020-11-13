@@ -1,63 +1,104 @@
-"""
-Generates ghost atoms for NICS calculations of aromatic compounds for Gaussian 
 
-Prerequisits:
-    Molecule must be aligned with z-plane 
-"""
+class input_generator:
+
+    def preamble_func(self):
+
+        preamble = """
+    Easy way to add ghost atoms to end of Gaussian input (.com) file
+
+    Key (in alphabetical order): 
+        'bq' = ghost atoms 
+        'coor(s)' = coordinates 
+        'func' = function
+        'inp' = input
+        'usr' = user
+        'wf' = write file
+
+    Prerequisits:
+        Molecule must already be aligned with origin
+        (Optional) molecule geometry already optimised 
+        Coors must be given by usr as float
+        """
+
+        print(preamble)
 
 
-import numpy as np
+    def enter_bq_coor(self):
+        """
+        asks usr for coors for ghost atoms
+        generates a list containing usr defined Bq coordinates
+        prints list of coors 
+        asks usr to confirm coors
+        check() func allows usr to re-input coors or accept to add to inp file
+        """
 
+        print("\nEnter coordinates (x, y, z) for desired ghost atoms (separated by spaces).")
+        print("Press 'enter' to enter next coordinate.")
+        print("Press 'enter' again when finished:\n")
 
-def input_params():
-    """
-    asks usr for input file name and ghost atom parameters (start, end, spacings)
-    generates list of z coordinates for GAs
-    appends list with x and y coordinates 
-    """
+        each_coor = []
+        # list to hold Bq coordinates 
 
-    file_name = input("Type the name of the input file to be appended: ")
+        while True:
+            coor = input()
 
-    ga_no_start = int(input("What is the start coordinate for the GAs? "))
-    ga_no_end = int(input("What is the end coordinate for the GAs? "))
-    ga_spacing = float(input("What are the vecotr spacings between GAs? "))
-
-    ga_list = np.arange(ga_no_start, ga_no_end + ga_spacing, ga_spacing).tolist()
-
-    return file_name, ga_list
-
-        
-
-def append_input_file(file_name, ga_list):
-    """
-    appends the Gaussian input file with ghost atoms
-    checks to see if file is empty
-    iterate over each string in a list
-    if not empty, will add input as new line
-    other lines will append new line at the end of preceding line
-
-    modified from: https://thispointer.com/how-to-append-text-or-lines-to-a-file-in-python/ (accessed 06/11/2020)
-    """
-
-    with open(file_name, "a+") as file_object:
-        append_eol = False
-
-        file_object.seek(0)
-        data = file_object.read(100)
-
-        if len(data) > 0:
-            append_eol = True
-
-        for line in lines_to_append:
-            if append_eol == True:
-                file_object.write("/n") 
-
+            if coor != "":
+                each_coor.append(coor)
             else:
-                append_eol = True
+                break
 
-            file_object.write(line)
+        self.each_bq_coor = ["Bq " + coor for coor in each_coor]
+        # new list to enable adddition of "Bq"
+
+        print("Output:")
+        print(*self.each_bq_coor, sep = '\n')
+
+        def check():
+            cont = input("\nProceed? (y/n) ")
+
+            if cont == "y" or cont == "yes":
+                self.append_input_file()
+            elif cont == "n" or cont == "no":
+                self.enter_bq_coor()
+            else:
+                print("Not a valid answer.")
+                check()
+
+        check()
+
+
+    def append_input_file(self):
+        """
+        asks usr for filename for original file name then asks for a name for a copy of the original file
+        copys contents of original file to copy
+        appends copied file with Bq atoms generated earlier
+        adds new line to end of file to comply with Gaussian input file requirements
+        opens copied file as read so usr can check it's been correctly generated 
+        """
+
+        original_filename = input("\nFile name:\n")
+        copy_filename = input("\nName to save copy as:\n")
+
+        with open(original_filename) as original:
+            with open(copy_filename, "w+") as copy:
+
+                for line in original:
+                    copy.write(line)
+
+                for coor in self.each_bq_coor:
+                    copy.write('%s\n' % coor)
+
+        with open(copy_filename, "r") as copy:
+
+            if copy.mode == "r":
+                contents = copy.read()
+                print(contents)
+
+        exit()
 
 
 if __name__ == "__main__":
-    input_params()
-    append_input_file()
+    ig = input_generator()
+    ig.preamble_func()
+    ig.enter_bq_coor()
+    ig.append_input_file()
