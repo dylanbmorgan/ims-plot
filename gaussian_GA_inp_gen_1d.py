@@ -1,27 +1,24 @@
 
 class input_generator:
+    """
+Easy way to add ghost atoms to end of Gaussian input (.com) file
 
-    def preamble_func(self):
+Key (in alphabetical order): 
+    'bq' = ghost atoms 
+    'coor(s)' = coordinates 
+    'func' = function
+    'inp' = input
+    'usr' = user
+    'wf' = write file
 
-        preamble = """
-    Easy way to add ghost atoms to end of Gaussian input (.com) file
+Prerequisits:
+    Molecule must already be aligned with origin
+    (Optional) molecule geometry already optimised 
+    Coors must be given by usr as float
+    """
 
-    Key (in alphabetical order): 
-        'bq' = ghost atoms 
-        'coor(s)' = coordinates 
-        'func' = function
-        'inp' = input
-        'usr' = user
-        'wf' = write file
-
-    Prerequisits:
-        Molecule must already be aligned with origin
-        (Optional) molecule geometry already optimised 
-        Coors must be given by usr as float
-        """
-
-        print(preamble)
-
+    def __init__(self):
+        self.each_bq_coor = []
 
     def enter_bq_coor(self):
         """
@@ -53,7 +50,7 @@ class input_generator:
         print("Output:")
         print(*self.each_bq_coor, sep = '\n')
 
-        def check():
+        def check(): #TODO: remove increment
             cont = input("\nProceed? (y/n) ")
 
             if cont == "y" or cont == "yes":
@@ -94,11 +91,12 @@ class input_generator:
                 contents = copy.read()
                 print(contents)
 
-        exit()
+        exit() # TODO: why
 
 
 if __name__ == "__main__":
     ig = input_generator()
-    ig.preamble_func()
+    print(ig.__doc__)
+    #ig.preamble_func()
     ig.enter_bq_coor()
-    ig.append_input_file()
+    ig.append_input_file() # TODO: twice ?
