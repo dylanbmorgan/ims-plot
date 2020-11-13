@@ -50,7 +50,7 @@ Prerequisits:
         print("Output:")
         print(*self.each_bq_coor, sep = '\n')
 
-        def check(): #TODO: remove increment
+        def check(): #TODO: remove indent
             cont = input("\nProceed? (y/n) ")
 
             if cont == "y" or cont == "yes":
