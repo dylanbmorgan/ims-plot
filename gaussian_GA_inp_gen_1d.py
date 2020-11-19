@@ -1,4 +1,7 @@
 
+import numpy
+
+
 class input_generator:
     """
 Easy way to add ghost atoms to end of Gaussian input (.com) file
@@ -9,6 +12,7 @@ Key (in alphabetical order):
     'func' = function
     'inp' = input
     'usr' = user
+    'vs' = vector spacings
     'wf' = write file
 
 Prerequisits:
@@ -17,48 +21,51 @@ Prerequisits:
     Coors must be given by usr as float
     """
 
-    def __init__(self):
-        self.each_bq_coor = []
+   # def __init__(self):
+        #self.each_bq_coor = []
         # class-assigned list where Bq atoms will be appended to
         # alternative to using global variable
 
     def enter_bq_coor(self):
         """
-        asks usr for coors for ghost atoms
-        generates a list containing usr defined Bq coordinates
+        asks usr for coor of first bq, vs, and no of bq atoms
+        generates a array of coors accordingly
         prints list of coors
         asks usr to confirm coors
-        check() func allows usr to re-input coors or accept to add to inp file
+        check() func allows usr to re-input coors or accept to append to copied inp file
         """
 
-        print("\nEnter coordinates (x, y, z) for desired ghost atoms (separated by spaces).")
-        print("Press 'enter' to enter next coordinate.")
-        print("Press 'enter' again when finished:\n")
+        coor = input("\nEnter coordinates (x, y, z) for first ghost atom (separated by spaces): ")
+        vs = int(input("Specify vector spacings: "))
+        bq_no = int(input("Specify number of ghost atoms: "))
 
-        each_coor = []
-        # list to hold Bq coordinates
+        print("\n")
+        print("Output:\n")
 
-        while True:
-            coor = input()
+        x0 = numpy.array(coor.split(), float)
 
-            if coor != "":
-                each_coor.append(coor)
-            else:
-                break
+        for n in range(bq_no+1):
+            xn = x0 + n * vs
+            print("Bq %f %f %f"%(xn[0], xn[1], xn[2]))
+#
+        # TODO: prevent from iterating over x and y coors 
+        #       pass to variable or list instead of printing
+        #       assign variable or list as class so will be able to move between functions
+        #       (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
 
-        self.each_bq_coor = ["Bq " + coor for coor in each_coor]
-        # new list required to add Bq to start of line
-
-        print("Output:")
-        print(*self.each_bq_coor, sep = '\n')
+        #self.each_bq_coor = ["Bq " + coor for coor in each_coor]
+        # new list required to add Bq to start of line 
+        #print("Output:")
+        #print(*self.each_bq_coor, sep = '\n')
 
     def check(self):
         cont = input("\nProceed? (y/n) ")
 
-        if cont == "y" or cont == "yes":
+        if cont.lower() == "y" or cont.lower() == "yes":
             self.append_input_file()
-        elif cont == "n" or cont == "no":
+        elif cont.lower() == "n" or cont.lower() == "no":
             self.enter_bq_coor()
+            ig.check()
         else:
             print("Not a valid answer.")
             ig.check()
