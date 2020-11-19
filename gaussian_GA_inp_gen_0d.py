@@ -3,9 +3,9 @@ class input_generator:
     """
 Easy way to add ghost atoms to end of Gaussian input (.com) file
 
-Key (in alphabetical order):
-    'bq' = ghost atoms
-    'coor(s)' = coordinates
+Key (in alphabetical order): 
+    'bq' = ghost atoms 
+    'coor(s)' = coordinates 
     'func' = function
     'inp' = input
     'usr' = user
@@ -13,20 +13,18 @@ Key (in alphabetical order):
 
 Prerequisits:
     Molecule must already be aligned with origin
-    (Optional) molecule geometry already optimised
+    (Optional) molecule geometry already optimised 
     Coors must be given by usr as float
     """
 
     def __init__(self):
         self.each_bq_coor = []
-        # class-assigned list where Bq atoms will be appended to
-        # alternative to using global variable
 
     def enter_bq_coor(self):
         """
         asks usr for coors for ghost atoms
         generates a list containing usr defined Bq coordinates
-        prints list of coors
+        prints list of coors 
         asks usr to confirm coors
         check() func allows usr to re-input coors or accept to add to inp file
         """
@@ -36,7 +34,7 @@ Prerequisits:
         print("Press 'enter' again when finished:\n")
 
         each_coor = []
-        # list to hold Bq coordinates
+        # list to hold Bq coordinates 
 
         while True:
             coor = input()
@@ -46,13 +44,13 @@ Prerequisits:
             else:
                 break
 
-        self.each_bq_coor = ["Bq " + coor for coor in each_coor]
-        # new list required to add Bq to start of line
+        self.each_bq_coor.append("Bq " + coor for coor in each_coor)
+        # new list to enable adddition of "Bq"
 
         print("Output:")
         print(*self.each_bq_coor, sep = '\n')
 
-    def check(self):
+    def check(): 
         cont = input("\nProceed? (y/n) ")
 
         if cont == "y" or cont == "yes":
@@ -61,18 +59,18 @@ Prerequisits:
             self.enter_bq_coor()
         else:
             print("Not a valid answer.")
-            ig.check()
+            check()
 
     def append_input_file(self):
         """
-        asks usr for original filename then asks for name for copy of original file
+        asks usr for filename for original file name then asks for a name for a copy of the original file
         copys contents of original file to copy
         appends copied file with Bq atoms generated earlier
         adds new line to end of file to comply with Gaussian input file requirements
-        opens copied file as read so usr can check it's been correctly generated
+        opens copied file as read so usr can check it's been correctly generated 
         """
 
-        original_filename = input("\nFile to copy:\n")
+        original_filename = input("\nFile name:\n")
         copy_filename = input("\nName to save copy as:\n")
 
         with open(original_filename) as original:
@@ -90,9 +88,12 @@ Prerequisits:
                 contents = copy.read()
                 print(contents)
 
+        exit() # TODO: why
+
 
 if __name__ == "__main__":
     ig = input_generator()
     print(ig.__doc__)
     ig.enter_bq_coor()
     ig.check()
+    ig.append_input_file() # TODO: twice ?
