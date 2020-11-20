@@ -15,10 +15,10 @@ Key (in alphabetical order):
     'vs' = vector spacings
     'wf' = write file
 
-Prerequisits:
+Important Notes:
     Molecule must already be aligned with origin
     (Optional) molecule geometry already optimised
-    Coors must be given by usr as float
+    Only coors from one dimension should be changed
     """
 
    # def __init__(self):
@@ -35,23 +35,24 @@ Prerequisits:
         check() func allows usr to re-input coors or accept to append to copied inp file
         """
 
-        coor = input("\nEnter coordinates (x, y, z) for first ghost atom (separated by spaces): ")
-        vs = int(input("Specify vector spacings: "))
+        coor = input("\nEnter coordinates (x, y, z) for first ghost atom separated by spaces: ")
+        vs = input("Specify vector spacings (x, y, z) separated by spaces: ")
         bq_no = int(input("Specify number of ghost atoms: "))
 
         print("\n")
         print("Output:\n")
 
         x0 = numpy.array(coor.split(), float)
+        delta_xyz = numpy.array(vs.split(), float)
 
         for n in range(bq_no+1):
-            xn = x0 + n * vs
+            xn = x0 + n * delta_xyz
             print("Bq %f %f %f"%(xn[0], xn[1], xn[2]))
 #
-        # TODO: prevent from iterating over x and y coors 
-        #       pass to variable or list instead of printing
-        #       assign variable or list as class so will be able to move between functions
-        #       (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
+        # TODO: [x] prevent from iterating over x and y coors 
+        #       [ ] pass to variable or list instead of printing
+        #       [ ] assign variable or list as class so will be able to move between functions
+        #       [ ] (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
 
         #self.each_bq_coor = ["Bq " + coor for coor in each_coor]
         # new list required to add Bq to start of line 
