@@ -19,6 +19,8 @@ Prerequisits:
 
     def __init__(self):
         self.each_bq_coor = []
+        # class-assigned list where Bq atoms will be appended to
+        # alternative to using global variable
 
     def enter_bq_coor(self):
         """
