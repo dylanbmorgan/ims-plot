@@ -47,18 +47,14 @@ Important Notes:
 
         for n in range(bq_no+1):
             xn = x0 + n * delta_xyz
-            self.bq_coors = "Bq %f %f %f"%(xn[0], xn[1], xn[2])
-            #self.bq_coors = f"Bq {xn:{0}} {xn:{1}} {xn:{2}}"
+            self.bq_coors = f"Bq {xn[0]} {xn[1]} {xn[2]}"
             print(self.bq_coors)
             
         # TODO: [x] prevent from iterating over x and y coors 
         #       [x] pass to variable or list instead of printing
         #       [x] assign variable or list as class so will be able to move between functions
-        #       [ ] replace % string format with f string
+        #       [x] (optional) replace % string format with f string for self.bq_coors
         #       [ ] (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
-
-        #self.each_bq_coor = ["Bq " + coor for coor in each_coor]
-        # new list required to add Bq to start of line 
 
     def check(self):
         cont = input("\nProceed? (y/n) ")
