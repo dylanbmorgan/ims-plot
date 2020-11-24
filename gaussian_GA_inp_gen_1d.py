@@ -22,8 +22,8 @@ Important Notes:
     """
 
     def __init__(self):
-        self.bq_coors = None
-        # class-assigned variable where bq atoms will be appended to
+        self.bq_coors = []
+        # class-assigned list where bq atoms will be appended to
         # alternative to using global variable
 
     def enter_bq_coor(self):
@@ -45,14 +45,17 @@ Important Notes:
         x0 = numpy.array(coor.split(), float)
         delta_xyz = numpy.array(vs.split(), float)
 
-        for n in range(bq_no+1):
+        for n in range(bq_no):
             xn = x0 + n * delta_xyz
-            self.bq_coors = f"Bq {xn[0]} {xn[1]} {xn[2]}"
-            print(self.bq_coors)
+            self.bq_coors.append(f"Bq {xn[0]} {xn[1]} {xn[2]}")
+        
+        print(*self.bq_coors, sep = '\n')  
             
         # TODO: [x] prevent from iterating over x and y coors 
         #       [x] pass to variable or list instead of printing
         #       [x] assign variable or list as class so will be able to move between functions
+        #       [x] update variables in append_inp_file()
+        #       [x] create list for coors
         #       [x] (optional) replace % string format with f string for self.bq_coors
         #       [ ] (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
 
@@ -60,7 +63,7 @@ Important Notes:
         cont = input("\nProceed? (y/n) ")
 
         if cont.lower() == "y" or cont.lower() == "yes":
-            self.append_input_file()
+            self.append_inp_file()
         elif cont.lower() == "n" or cont.lower() == "no":
             self.enter_bq_coor()
             ig.check()
@@ -68,7 +71,7 @@ Important Notes:
             print("Not a valid answer.")
             ig.check()
 
-    def append_input_file(self):
+    def append_inp_file(self):
         """
         asks usr for original filename then asks for name for copy of original file
         copys contents of original file to copy
@@ -77,8 +80,8 @@ Important Notes:
         opens copied file as read so usr can check it's been correctly generated
         """
 
-        original_filename = input("\nFile to copy:\n")
-        copy_filename = input("\nName to save copy as:\n")
+        original_filename = input("\nFile to copy (must be full path):\n")
+        copy_filename = input("\nName to save copy as (must be full path):\n")
 
         with open(original_filename) as original:
             with open(copy_filename, "w+") as copy:
@@ -86,7 +89,7 @@ Important Notes:
                 for line in original:
                     copy.write(line)
 
-                for coor in self.each_bq_coor:
+                for coor in self.bq_coors:
                     copy.write('%s\n' % coor)
 
         with open(copy_filename, "r") as copy:
