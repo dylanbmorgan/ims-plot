@@ -7,25 +7,26 @@ Prints to new file
     """
 
     def __init__(self):
-        self.each_log_line = []
-        self.bq_iso_value = []
+        self.iso_values = []
 
     def read_file(self):
 
         filename = input("Gaussian output file name (must be full path): ")
+        log_line = []
 
         with open(filename) as log_file:
             for line in log_file:
                 if "Isotropic" in line and "Bq" in line:
-                    
-                    #iso_line = line.split()
+                    log_line.append(line.split())
+                        
+            for line in log_line:
+                for word in line:
+                    if word == line[4]:
+                        self.iso_values.append(float(word))
 
-                    #iso_value = #4th item in 
+            #trying to append only the 4th item in line to iso_value
 
-                    #for 4th value in line, add value to bq_iso_value 
-                    #try in while loop?*
-                    #try with numpy array maybe?
-                    #try adding contents of line as a list and adding fourth item in list to new list?
+            print(self.iso_values)
                        
         #print all iso values 
             
@@ -37,11 +38,4 @@ if __name__ == "__main__":
     lp = log_parser()
     print(lp.__doc__)
     lp.read_file()
-
-
-# *something like:
-#
-# while length of list <2:
-#   skip line 
-# else:
-#   add item in line to list 
+    
