@@ -34,21 +34,25 @@ Glossary (in alphabetical order):
 
     def read_coors(self):
         with open(self.filename) as logfile:
-            for line in logfile:
-                self.all_lines.append(line)
+            while True:
+                try:
+                    line = next(logfile)
+                except StopIteration:
+                    print(f'Finished parsing file {self.filename}')
+                    break
 
-        for line in self.all_lines:
-            if 'Isotropic' in line and 'Bq' in line:
-                self.coors.append(line[1]) 
-                self.coors.append(line[2])
-                self.coors.append(line[3])
+                if 'Isotropic' and 'Bq' in line:
+                    line = next(logfile)
+                    self.coors.append(line)
 
-                #trying to select the line after the line which contains the strings 'Isotropic' and 'Bq'
+        print(*self.coors, sep = '\n')
 
     def copy_iso_values(self):
         '''
         copy iso values and coors to new file
         '''
+
+        pass
 
         copy_filename = input('Name to save data as (must be full path):')
 
@@ -78,14 +82,30 @@ if __name__ == '__main__':
 
 '''  
 TODO:
-[] Enable parsing of matrix coors to lists
-[] Print iso values as column
-[] Copy lists to new file
+[] Make read_coors work
+[X] Print iso values as column
+[X] Copy lists to new file
 '''
 
 '''
 NOTE:
 /home/dylanmorgan/python/test/nmr_anthracene.log
+
+def read_coors(self):
+    #original func without while True (doesn't work)
+
+    with open(self.filename) as logfile:
+        for line in logfile:
+            self.all_lines.append(line)
+
+    for line in self.all_lines:
+        if 'Isotropic' in line and 'Bq' in line:
+            self.coors.append(line[1]) 
+            self.coors.append(line[2])
+            self.coors.append(line[3])
+
+            #trying to select the line after the line which contains the strings 'Isotropic' and 'Bq'
+
 
 def read_iso_value(self):
     #possible alt to other func with same name
