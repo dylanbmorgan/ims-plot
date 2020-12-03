@@ -13,7 +13,6 @@ Glossary (in alphabetical order):
     def __init__(self):
         self.filename = None
         self.iso_values = []
-        self.all_lines = []
         self.coors = []
 
     def read_iso_values(self):
@@ -30,37 +29,48 @@ Glossary (in alphabetical order):
                     if word == line[4]:
                         self.iso_values.append(float(word))
 
-            print(*self.iso_values, sep = '\n')
+            print('\nIsotropic NICS values:')
+            
+            for count, line in enumerate(self.iso_values, 1): # Remove these 2 lines in final version
+                print(f'{count}  Bq  {line}')
 
     def read_coors(self):
         with open(self.filename) as logfile:
-            for line in logfile:
-                self.all_lines.append(line)
-
-            for line in self.all_lines:
-                if 'Isotropic' in line:
+            while True:
+                try:
                     line = next(logfile)
-                    self.coors.append(line)
+                    if 'Isotropic' in line and 'Bq' in line:
+                        line = next(logfile)
+                        self.coors.append(line)
+                        line = next(logfile)
+                        self.coors.append(line)
+                        line = next(logfile)
+                        self.coors.append(line)
 
-                    #trying to select the line after the line which contains the strings 'Isotropic' and 'Bq'
+                except StopIteration:
+                    #print(f'Finished parsing file {self.filename}')
+                    break
+            
+        print('\nBq coordinates:') 
+        print(*self.coors, sep = '') # Remove these 2 lines in final version
 
     def copy_iso_values(self):
         '''
         copy iso values and coors to new file
         '''
 
-        copy_filename = input('Name to save data as (must be full path):')
+        copy_filename = input('Name to save data as (must be full path): ')
 
         with open(copy_filename, 'w+') as copy:
-            copy.write('\nNICS Isotropic Values:')
+            copy.write('\nNICS Isotropic Values:\n')
             
-            for line in self.iso_values:
-                copy.write(line)
+            for count, line in enumerate(self.iso_values, 1):
+                copy.write(str(f'{count}  Bq  {line}\n'))
 
-            copy.write('\nGhost Atom Matrix Coordinates:')
+            copy.write('\nGhost Atom Matrix Coordinates:\n')
 
             for line in self.coors:
-                copy.write(line)
+                copy.write(f'{line}')
         
         with open(copy_filename, 'r') as copy:
             contents = copy.read()
@@ -77,27 +87,19 @@ if __name__ == '__main__':
 
 '''  
 TODO:
-[] Enable parsing of matrix coors to lists
-[] Print iso values as column
-[] Copy lists to new file
+[X] Print iso values as column
+[X] Copy lists to new file
+[X] Make read_coors() work
+[X] Make read_coors work() for other coors (and not just X) 
+[ ] Fix spacings between coors so there are no spaces between XX, XY, XZ and 1 between each Bq
+    # Maybe can use: 
+    # for n in range:
+    # from inp_gen_1d
+[ ] Print each Bq atom with its label (eg. 4 Bq [then coors here])
 '''
 
 '''
 NOTE:
 /home/dylanmorgan/python/test/nmr_anthracene.log
-
-def read_iso_value(self):
-    #possible alt to other func with same name
-
-    filename = input('Gaussian output file name (must be full path): ')
-    all_lines = []
-    logline = []
-    
-    with open(filename) as logfile:
-        for line in logfile:
-            logline.append(line.split())
-
-            if 'Isotropic' in line and 'Bq' in line:
-                logline.append(line)
-                print logline
+/home/dylanmorgan/python/test/parsed_nmr_anthracene.txt
 '''

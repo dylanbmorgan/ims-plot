@@ -91,7 +91,7 @@ Important Notes:
                     copy.write(line)
 
                 for coor in self.bq_coors:
-                    copy.write('%s\n' % coor)
+                    copy.write(f'{coor}\n')
 
         with open(copy_filename, "r") as copy:
 
