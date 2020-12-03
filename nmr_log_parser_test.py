@@ -41,11 +41,11 @@ Glossary (in alphabetical order):
                     print(f'Finished parsing file {self.filename}')
                     break
 
-                if 'Isotropic' and 'Bq' in line:
+                if 'Isotropic' in line:
                     line = next(logfile)
                     self.coors.append(line)
 
-        print(*self.coors, sep = '\n')
+        print(*self.coors)
 
     def copy_iso_values(self):
         '''

@@ -37,13 +37,12 @@ Glossary (in alphabetical order):
             for line in logfile:
                 self.all_lines.append(line)
 
-        for line in self.all_lines:
-            if 'Isotropic' in line and 'Bq' in line:
-                self.coors.append(line[1]) 
-                self.coors.append(line[2])
-                self.coors.append(line[3])
+            for line in self.all_lines:
+                if 'Isotropic' in line:
+                    line = next(logfile)
+                    self.coors.append(line)
 
-                #trying to select the line after the line which contains the strings 'Isotropic' and 'Bq'
+                    #trying to select the line after the line which contains the strings 'Isotropic' and 'Bq'
 
     def copy_iso_values(self):
         '''
