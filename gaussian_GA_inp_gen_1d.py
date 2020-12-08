@@ -57,6 +57,7 @@ Important Notes:
         #       [x] update variables in append_inp_file()
         #       [x] create list for coors
         #       [x] (optional) replace % string format with f string for self.bq_coors
+        #       [ ] (optional) change % for f string in append_inp_file()
         #       [ ] (optional) prevent usr from entering any values incorrectly (eg. vs) by creating loop allowing them to re-enter
 
     def check(self):
@@ -90,7 +91,7 @@ Important Notes:
                     copy.write(line)
 
                 for coor in self.bq_coors:
-                    copy.write('%s\n' % coor)
+                    copy.write(f'{coor}\n')
 
         with open(copy_filename, "r") as copy:
 
