@@ -63,16 +63,16 @@ Glossary (in alphabetical order):
         append Bq and count to each line
         '''
 
-        copy_out_filename = input('Name to save data as (must be full path): ')
+        copy_out_filename = 'parsed_log_data'
 
         with open(copy_out_filename, 'w+') as copy:
             copy.write('\nGhost Atom Coordinates:\n')
             for count, line in enumerate(self.coors, 1):
-                copy.write(str(f'{count} {line}'))
+                copy.write(str(f'{count} c{line}'))
 
             copy.write('\n\nNICS Isotropic Values:\n')
             for count, line in enumerate(self.iso_values, 1):
-                copy.write(str(f'{count}  Bq:  {line}\n'))
+                copy.write(str(f'{count}  iBq:  {line}\n'))
 
             copy.write('\nGhost Atom Tensors:\n')
             for line in self.tensors:   
@@ -111,11 +111,10 @@ TODO:
 
 NOTE:
 pop:
+/home/dylanmorgan/python/test/benzene_opt_target.com
 /home/dylanmorgan/python/test/nmr_anthracene.log
-/home/dylanmorgan/python/test/parsed_nmr_anthracene.txt
 
 manjaro:
 /home/pop!_os/home/dylanmorgan/python/test/benzene_opt_target.com
 /home/pop!_os/home/dylanmorgan/python/test/nmr_anthracene.log
-/home/pop!_os/home/dylanmorgan/python/test/parsed_nmr_anthracene.txt
 '''
