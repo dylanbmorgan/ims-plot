@@ -23,19 +23,17 @@ class plotter:
             print('Not a valid option, please pick again.\n')
             p.append_coors()
 
-        xcoor_line = []
-        ycoor_line = []
-
         with open('parsed_log_data') as data:
             for line in data:
                 words = line.split()
+
                 if 'cBq' in line:
                     self.xvalues.append(float(words[axis]))
                 elif 'iBq' in line:
                     self.yvalues.append(float(words[2]))
 
-        print('x-axis:', *self.xvalues, sep = ' ')  #remove when committing 
-        print('y-axis:', *self.yvalues, sep = ' ')  #remove when committing 
+        print('x-axis:', *self.xvalues, sep = ' ')
+        print('y-axis:', *self.yvalues, sep = ' ')
 
     def create_plot(self):    
         x = self.xvalues  #x-values; where the atoms are   
@@ -51,5 +49,5 @@ if __name__ == '__main__':
 
 '''
 TODO: 
-[ ] Prevent multiple 0.0 values from being added to xvalues list
+[X] Prevent multiple 0.0 values from being added to xvalues list
 '''
