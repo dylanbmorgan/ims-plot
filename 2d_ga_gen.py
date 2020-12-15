@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+ghostgen.py
+
 import sys
 import click
 import numpy 
