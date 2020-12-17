@@ -17,14 +17,17 @@ class input_generator:
         deltaxyz = numpy.array(vs.split(), float)
         deltax = numpy.array([deltaxyz[0], 0, 0])
         deltay = numpy.array([0, deltaxyz[1], 0])
-
+        deltaz = numpy.array([0, 0, deltaxyz[2]])
 
         for xn in range(bq_no):
             nx = n0 + xn * deltax
 
             for yn in range(bq_no):
                 ny = n0 + yn * deltay
-                self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nz[2]}')
+
+                for zn in range(bq_no):
+                    nz = n0 + zn * deltaz
+                    self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nz[2]}')
 
         print('\n')
         print('Output:\n')

@@ -105,3 +105,4 @@ if __name__ == "__main__":
     print(ig.__doc__)
     ig.enter_bq_coor()
     ig.check()
+    ig.append_inp_file()
