@@ -24,7 +24,7 @@ class input_generator:
 
             for yn in range(bq_no):
                 ny = n0 + yn * deltay
-                self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nz[2]}')
+                self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nx[2]}')
 
         print('\n')
         print('Output:\n')
