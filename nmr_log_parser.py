@@ -1,14 +1,7 @@
+#!/usr/bin/python
+
 
 class log_parser:
-    '''
-Takes .log output file from Guassian 
-Reads isotropic NICS values 
-Prints to new file
-
-Glossary (in alphabetical order):
-    'coors' = coordinates 
-    'iso' = isotropic NICS values
-    '''
 
     def __init__(self):
         self.inp_filename = None
@@ -58,11 +51,6 @@ Glossary (in alphabetical order):
         print(f'\nFinished parsing file: {self.out_filename}\n')
 
     def copy_iso_values(self):
-        '''
-        copy coors, iso values, and tensors to new file
-        append Bq and count to each line
-        '''
-
         copy_out_filename = 'parsed_log_data'
 
         with open(copy_out_filename, 'w+') as copy:
@@ -88,33 +76,8 @@ Glossary (in alphabetical order):
 
 if __name__ == '__main__':
     lp = log_parser()
-    print(lp.__doc__)
     lp.read_coors()
     lp.read_iso_values()
     lp.read_tensors()
     lp.copy_iso_values()
 
-
-'''  
-TODO:
-[X] Print iso values as column
-[X] Copy lists to new file
-[X] Make read_tensors() work
-[X] Make read_tensors work() for other tensors (and not just X) 
-[(x)] Fix spacings between tensors so there are no spaces between XX, XY, XZ and 1 between each Bq
-    # Maybe can use: 
-    # for n in range:
-    # from inp_gen_1d
-[N/A] Print each Bq atom with its label (eg. 4 Bq [then tensors here])
-[ ] Fix example files. Benzene is given as input and anthracene is given as output
-
-
-NOTE:
-pop:
-/home/dylanmorgan/python/test/benzene_opt_target.com
-/home/dylanmorgan/python/test/nmr_anthracene.log
-
-manjaro:
-/home/pop!_os/home/dylanmorgan/python/test/benzene_opt_target.com
-/home/pop!_os/home/dylanmorgan/python/test/nmr_anthracene.log
-'''
