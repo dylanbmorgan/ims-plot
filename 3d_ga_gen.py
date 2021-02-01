@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import numpy 
+import numpy
 
 
 class input_generator:
@@ -31,7 +31,7 @@ class input_generator:
 
         print('\n')
         print('Output:\n')
-        print(*self.bq_coors, sep = '\n')  
+        print(*self.bq_coors, sep='\n')
 
     def check(self):
         cont = input('\nProceed? (y/n) ')

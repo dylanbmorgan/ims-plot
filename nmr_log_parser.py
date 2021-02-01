@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!usr/bin/env python3
 
 
 class log_parser:
@@ -26,7 +26,7 @@ class log_parser:
             for line in logfile:
                 if 'Isotropic' in line and 'Bq' in line:
                     logline.append(line.split())
-                        
+
             for line in logline:
                 for word in line:
                     if word == line[4]:
@@ -47,7 +47,7 @@ class log_parser:
 
                 except StopIteration:
                     break
-            
+
         print(f'\nFinished parsing file: {self.out_filename}\n')
 
     def copy_iso_values(self):
@@ -63,12 +63,12 @@ class log_parser:
                 copy.write(str(f'{count}  iBq:  {line}\n'))
 
             copy.write('\nGhost Atom Tensors:\n')
-            for line in self.tensors:   
+            for line in self.tensors:
                 if 'XZ' in line:
                     copy.write(f'{line}\n')
                 else:
                     copy.write(line)
-        
+
         with open(copy_out_filename, 'r') as copy:
             contents = copy.read()
             print(contents)
@@ -80,4 +80,3 @@ if __name__ == '__main__':
     lp.read_iso_values()
     lp.read_tensors()
     lp.copy_iso_values()
-

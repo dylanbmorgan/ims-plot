@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt
 
 
 class plotter:
@@ -18,7 +18,7 @@ class plotter:
 
         if xinput == 'xy':
             axisa = 2
-            axusb = 3
+            axisb = 3
         elif xinput == 'xz':
             axisa = 2
             axisb = 4
@@ -39,15 +39,16 @@ class plotter:
                 elif 'iBq' in line:
                     self.yvalues.append(float(words[2]))
 
-        print('x-axis:', *self.xvalues, sep = ' ')
-        print('y-axis:', *self.yvalues, sep = ' ')
+        print('x-axis:', *self.xvalues, sep=' ')
+        print('y-axis:', *self.yvalues, sep=' ')
 
-    def create_plot(self):    
-        x = self.xvalues  #x-values: where the atoms are for axisa
-        y = self.yvalues  #the isotropic NICS values
-        z = self.zvalues  #x-values: where the atoms are for axisb
-        plt.plot(x, y, z)  #plotting the points   
-        plt.show()  #function to show the plot  
+    def create_plot(self):
+        x = self.xvalues  # x-values: where the atoms are for axisa
+        y = self.yvalues  # the isotropic NICS values
+        z = self.zvalues  # x-values: where the atoms are for axisb
+        plt.plot(x, y, z)  # plotting the points
+        plt.show()  # function to show the plot
+
 
 if __name__ == '__main__':
     p = plotter()

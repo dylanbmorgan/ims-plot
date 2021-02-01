@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import numpy 
+import numpy
 
 
 class input_generator:
@@ -18,7 +18,6 @@ class input_generator:
         deltax = numpy.array([deltaxyz[0], 0, 0])
         deltay = numpy.array([0, deltaxyz[1], 0])
 
-
         for xn in range(bq_no):
             nx = n0 + xn * deltax
 
@@ -28,7 +27,7 @@ class input_generator:
 
         print('\n')
         print('Output:\n')
-        print(*self.bq_coors, sep = '\n')  
+        print(*self.bq_coors, sep='\n')
 
     def check(self):
         cont = input('\nProceed? (y/n) ')
