@@ -1,7 +1,10 @@
 #!usr/bin/env python3
+# nmr_log_parser.py
+# Parses information from Gaussian output file to a new file
+# Author: Dylan Morgan
 
 
-class log_parser:
+class LogParser:
 
     '''
 Parses Bq coors, isotropic values, and tensors from Gaussian output (.log) file to new file.
@@ -84,7 +87,7 @@ REQUIRED: output (.log) AND input (.com) files
 
 
 if __name__ == '__main__':
-    lp = log_parser()
+    lp = LogParser()
     print(lp.__doc__)
     lp.read_coors()
     lp.read_iso_values()
