@@ -3,40 +3,41 @@
 # Parses information from Gaussian output file to a new file
 # Author: Dylan Morgan
 
+import argparse
+
 
 class LogParser:
 
-    '''
-Parses Bq coors, isotropic values, and tensors from Gaussian output (.log) file to new file.
-
-REQUIRED: output (.log) AND input (.com) files
-
-    '''
-
-# automate in future so this doesn't need to be done manually
-
-    def __init__(self):  # defines variables/lists for later functions
-        self.inp_filename = None
-        self.out_filename = None
+    def __init__(self):
         self.coors = []
         self.iso_values = []
         self.tensors = []
 
-    def read_coors(self):
-        self.inp_filename = input('Gaussian input file name: ')
+    def cli_cmds(self):
+        self.parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to a new file')
+        self.parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
+        self.parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
+        self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+                                 action='store_true',
+                                 help='print output of file containing parsed data')
+        self.parser.add_argument('-w', '--writename',
+                                 action='store_true',
+                                 default='parsed_log_data.txt',
+                                 help='file name to write parsed data file as')
+        self.args = self.parser.parse_args()
 
-        with open(self.inp_filename) as comfile:
+    def read_coors(self):
+        with open(self.args.inpfile) as comfile:
             for line in comfile:
                 if 'Bq' in line:
-                    self.coors.append(line)  # appends coors of ghost atoms from input file
+                    self.coors.append(line)  # Appends coors of ghost atoms from input file
 
     def read_iso_values(self):
-        self.out_filename = input('Gaussian output file name: ')
-        logline = []  # only needed for this function
+        logline = []
 
-        with open(self.out_filename) as logfile:
+        with open(self.args.outfile) as logfile:
             for line in logfile:
-                if 'Isotropic' in line and 'Bq' in line:  # only appends isotropic values of ghost atoms
+                if 'Isotropic' in line and 'Bq' in line:  # Only appends isotropic values of ghost atoms
                     logline.append(line.split())
 
             for line in logline:
@@ -45,7 +46,7 @@ REQUIRED: output (.log) AND input (.com) files
                         self.iso_values.append(float(word))
 
     def read_tensors(self):
-        with open(self.out_filename) as logfile:
+        with open(self.args.outfile) as logfile:
             while True:
                 try:
                     line = next(logfile)
@@ -55,24 +56,22 @@ REQUIRED: output (.log) AND input (.com) files
                         line = next(logfile)
                         self.tensors.append(line)
                         line = next(logfile)
-                        self.tensors.append(line)  # appends next 3 lines after line containing 'Isotropic' and 'Bq'
+                        self.tensors.append(line)
+                        # Appends next 3 lines after line containing 'Isotropic' and 'Bq'
+                        # These are the shielding tensors
 
                 except StopIteration:
                     break
 
-        print(f'\nFinished parsing file: {self.out_filename}\n')
-
     def copy_iso_values(self):
-        copy_out_filename = 'parsed_log_data'
-
-        with open(copy_out_filename, 'w+') as copy:
+        with open(self.args.writename, 'w+') as copy:
             copy.write('\nGhost Atom Coordinates:\n')
-            for count, line in enumerate(self.coors, 1):  # numerically specifies Bq atom
-                copy.write(str(f'{count} c{line}'))  # labels coors as 'c'
+            for count, line in enumerate(self.coors, 1):  # Numerically specifies Bq atom
+                copy.write(str(f'{count}  cBq: {line}'))  # Labels coors as 'c'
 
-            copy.write('\n\nNICS Isotropic Values:\n')
+            copy.write('\nNICS Isotropic Values:\n')
             for count, line in enumerate(self.iso_values, 1):
-                copy.write(str(f'{count}  iBq:  {line}\n'))  # labels isotropic values as 'i'
+                copy.write(str(f'{count}  iBq:  {line}\n'))  # Labels isotropic values as 'i'
 
             copy.write('\nGhost Atom Tensors:\n')
             for line in self.tensors:
@@ -81,14 +80,17 @@ REQUIRED: output (.log) AND input (.com) files
                 else:
                     copy.write(line)
 
-        with open(copy_out_filename, 'r') as copy:
-            contents = copy.read()
-            print(contents)
+        if self.args.verbose is True:
+            with open(self.args.writename, 'r') as copy:
+                contents = copy.read()
+                print(contents)
+
+        print(f'\nFinished parsing files: {self.args.inpfile} & {self.args.outfile}')
 
 
 if __name__ == '__main__':
     lp = LogParser()
-    print(lp.__doc__)
+    lp.cli_cmds()
     lp.read_coors()
     lp.read_iso_values()
     lp.read_tensors()

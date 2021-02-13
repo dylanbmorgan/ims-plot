@@ -13,9 +13,12 @@ class InputGenerator:
         self.bq_coors = []
 
     def cli_cmds(self):
-        self.parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files')
-        self.parser.add_argument('originalfile', help='Original file to copy')
-        self.parser.add_argument('newfile', help='New file to write to')
+        self.parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 3D')
+        self.parser.add_argument('originalfile', help='original file to copy')
+        self.parser.add_argument('newfile', help='new file to write to')
+        self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+                                 action='store_true',
+                                 help='print output of Bq coordinates to append to file')
         self.args = self.parser.parse_args()
 
     def gen_bq_coors(self):
@@ -28,7 +31,7 @@ class InputGenerator:
             deltaxyz = numpy.array(vs.split(), float)
             deltax = numpy.array([deltaxyz[0], 0, 0])
             deltay = numpy.array([0, deltaxyz[1], 0])
-            deltaz = numpy.array([0, 0, deltaxyz[2]])  # generates coors for file
+            deltaz = numpy.array([0, 0, deltaxyz[2]])  # Generates coors for file
 
             for xn in range(bq_no):
                 nx = n0 + xn * deltax
@@ -38,11 +41,11 @@ class InputGenerator:
 
                     for zn in range(bq_no):
                         nz = n0 + zn * deltaz
-                        self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nz[2]}')  # adds each coor as new line in new file
+                        self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nz[2]}')  # Adds each coor as new line in new file
 
-            print('\n')
-            print('Output:\n')  # shows usr list of coors generated
-            print(*self.bq_coors, sep='\n')  # is there a way to pipe this to less instead? eg. print... | less
+            if self.args.verbose is True:
+                print('\nOutput:\n')  # Shows usr list of coors generated
+                print(*self.bq_coors, sep='\n')  # I:s there a way to pipe this to less instead? eg. print... | less
 
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')
@@ -55,7 +58,7 @@ class InputGenerator:
         cont = input('\nProceed? (y/n) ')
 
         if cont.lower() == 'y' or cont.lower() == 'yes':
-            self.copy_inp()
+            pass
 
         elif cont.lower() == 'n' or cont.lower() == 'no':
             self.bq_coors.clear()
@@ -69,7 +72,6 @@ class InputGenerator:
     def copy_inp(self):
         with open(self.args.originalfile) as original:
             with open(self.args.newfile, "w+") as copy:
-
                 for line in original:
                     copy.write(line)
 
@@ -77,11 +79,11 @@ class InputGenerator:
                     copy.write(f'{coor}\n')
                     copy.write(' ')
 
-        with open(self.args.newfile, "r") as copy:
-
-            if copy.mode == "r":
-                contents = copy.read()
-                print(contents)
+        if self.args.verbose is True:
+            with open(self.args.newfile, "r") as copy:
+                if copy.mode == "r":
+                    contents = copy.read()
+                    print(contents)
 
         print('Task failed successfully!')
 
