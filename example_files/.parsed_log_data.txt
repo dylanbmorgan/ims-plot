@@ -1,32 +1,31 @@
+Parsed log data from Gaussian log file
+DO NOT edit the contents of this file!
 
 Ghost Atom Coordinates:
-1 cBq 0.0 0.0 -10.0
-2 cBq 0.0 0.0 -9.0
-3 cBq 0.0 0.0 -8.0
-4 cBq 0.0 0.0 -7.0
-5 cBq 0.0 0.0 -6.0
-6 cBq 0.0 0.0 -5.0
-7 cBq 0.0 0.0 -4.0
-8 cBq 0.0 0.0 -3.0
-9 cBq 0.0 0.0 -2.0
-10 cBq 0.0 0.0 -1.0
-11 cBq 0.0 0.0 0.0
-12 cBq 0.0 0.0 1.0
-13 cBq 0.0 0.0 2.0
-14 cBq 0.0 0.0 3.0
-15 cBq 0.0 0.0 4.0
-16 cBq 0.0 0.0 5.0
-17 cBq 0.0 0.0 6.0
-18 cBq 0.0 0.0 7.0
-19 cBq 0.0 0.0 8.0
-20 cBq 0.0 0.0 9.0
-21 cBq 0.0 0.0 10.0
-
+1  cBq: Bq 0.0 0.0 -5.0
+2  cBq: Bq 0.0 0.0 -4.0
+3  cBq: Bq 0.0 0.0 -3.0
+4  cBq: Bq 0.0 0.0 -2.0
+5  cBq: Bq 0.0 0.0 -1.0
+6  cBq: Bq 0.0 0.0 0.0
+7  cBq: Bq 0.0 0.0 1.0
+8  cBq: Bq 0.0 0.0 2.0
+9  cBq: Bq 0.0 0.0 3.0
+10  cBq: Bq 0.0 0.0 4.0
+11  cBq: Bq 0.0 0.0 5.0
 
 NICS Isotropic Values:
 1  iBq:  0.1808
 2  iBq:  0.2411
 3  iBq:  0.3304
+4  iBq:  0.4679
+5  iBq:  0.6894
+6  iBq:  1.0667
+7  iBq:  1.7605
+8  iBq:  3.2026
+9  iBq:  6.8212
+10  iBq:  13.602
+11  iBq:  11.6438
 12  iBq:  13.602
 13  iBq:  6.8212
 14  iBq:  3.2026

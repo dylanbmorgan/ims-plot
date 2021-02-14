@@ -1,9 +1,10 @@
-#!usr/bin/env python3
-# nmr_log_parser.py
-# Parses information from Gaussian output file to a new file
+#!/usr/bin/env python3
+# log_parser.py
+# Parses information from Gaussian output file to ./.parsed_log_data.txt
 # Author: Dylan Morgan
 
 import argparse
+import pathlib
 
 
 class LogParser:
@@ -14,7 +15,8 @@ class LogParser:
         self.tensors = []
 
     def cli_cmds(self):
-        self.parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to a new file')
+        self.parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to '
+                                              './.parsed_log_data.txt')
         self.parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
         self.parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
         self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
@@ -22,8 +24,8 @@ class LogParser:
                                  help='print output of file containing parsed data')
         self.parser.add_argument('-w', '--writename',
                                  action='store_true',
-                                 default='parsed_log_data.txt',
-                                 help='file name to write parsed data file as')
+                                 default='.parsed_log_data.txt',
+                                 help='specify custom name to save parsed log data file as')
         self.args = self.parser.parse_args()
 
     def read_coors(self):
@@ -65,6 +67,7 @@ class LogParser:
 
     def copy_iso_values(self):
         with open(self.args.writename, 'w+') as copy:
+            copy.write('Parsed log data from Gaussian log file\nDO NOT edit the contents of this file!\n')
             copy.write('\nGhost Atom Coordinates:\n')
             for count, line in enumerate(self.coors, 1):  # Numerically specifies Bq atom
                 copy.write(str(f'{count}  cBq: {line}'))  # Labels coors as 'c'
@@ -85,7 +88,8 @@ class LogParser:
                 contents = copy.read()
                 print(contents)
 
-        print(f'\nFinished parsing files: {self.args.inpfile} & {self.args.outfile}')
+        print(f'\nFinished parsing data from files: {self.args.inpfile} & {self.args.outfile}')
+        print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.writename}')
 
 
 if __name__ == '__main__':

@@ -41,7 +41,7 @@ class InputGenerator:
 
             if self.args.verbose is True:
                 print('\nOutput:\n')  # Shows usr list of coors generated
-                print(*self.bq_coors, sep='\n')  # I:s there a way to pipe this to less instead? eg. print... | less
+                print(*self.bq_coors, sep='\n')  # Is there a way to pipe this to less instead? eg. print... | less
 
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')
@@ -55,12 +55,10 @@ class InputGenerator:
 
         if cont.lower() == 'y' or cont.lower() == 'yes':
             pass
-
         elif cont.lower() == 'n' or cont.lower() == 'no':
             self.bq_coors.clear()
             self.gen_bq_coors()
             ig.check()
-
         else:
             print('Not a valid answer')
             ig.check()
@@ -70,18 +68,18 @@ class InputGenerator:
             with open(self.args.newfile, "w+") as copy:
                 for line in original:
                     copy.write(line)
-
                 for coor in self.bq_coors:
                     copy.write(f'{coor}\n')
-                    copy.write(' ')
+
+                copy.write(' ')
 
         if self.args.verbose is True:
             with open(self.args.newfile, "r") as copy:
                 if copy.mode == "r":
                     contents = copy.read()
-                    print(contents)
+                    print(f'\nContents of file:\n\n{contents}')
 
-        print('Task failed successfully!')
+        print('Task completed successfully!')
 
 
 if __name__ == '__main__':

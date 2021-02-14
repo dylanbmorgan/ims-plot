@@ -1,6 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# 2d_graph_plotter.py
+# Generatess
+# Author: Dylan Morgan
 
 import matplotlib.pyplot as plt
+import argparse
 
 
 class plotter:
@@ -10,11 +14,18 @@ class plotter:
         self.yvalues = []
         self.zvalues = []
 
+    def cli_cmds(self):
+        self.parser = argparse.ArgumentParser(description='Plots 3D graph of isotropic NICS values for Bq atoms'
+                                              ' across a 2D plane.')
+        self.parser.add_argument('-o', '--originalfile', required=True, help='Original file to copy')
+        self.parser.add_argument('-n', '--newfile', required=True, help='New file to write')
+        self.args = self.parser.parse_args()
+
     def append_coors(self):
         axisa = None
         axisb = None
         xinput = input('\nIn which plane do the coordinates change? (xy, xz, or yz): ')
-        print('')
+        print(' ')
 
         if xinput == 'xy':
             axisa = 2
