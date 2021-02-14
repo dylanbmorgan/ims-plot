@@ -34,6 +34,9 @@ class Plotter:
                                  default='.parsed_log_data.txt',
                                  help='if a custom file name was given for the parsed log data, use this flag to '
                                  'specify the name of that file')
+        self.parser.add_argument('-v', '--verbose',
+                                 action='store_true',
+                                 help='print the values of the x and y axes')
 
         self.args = self.parser.parse_args()
 
@@ -49,28 +52,29 @@ class Plotter:
             with open(self.args.file) as data:
                 for line in data:
                     words = line.split()
-
-                    if 'cBq' in line:
+                    if 'cBq:' in line:
                         self.xvalues.append(float(words[value]))
-                    elif 'iBq' in line:
+                    elif 'iBq:' in line:
                         self.yvalues.append(float(words[2]))
 
-                if 'cBq' and 'iBq' not in data:
-                    print('\nError: cBq and iBq not found in parsed log data')
-                    sys.exit()
-                elif 'cBq' not in data:
-                    print('\nError: cBq not found in parsed log data')
-                    sys.exit()
-                elif 'iBq' not in data:
-                    print('\nError: iBq not found in parsed log data')
-                    sys.exit()
-
-        except (FileNotFoundError) as error:
+        except (FileNotFoundError, ValueError, IndexError) as error:
             print('\nThere was an issue with reading the parsed data:')
             print(error)
+            sys.exit()
 
-        print('x-axis:', *self.xvalues, sep=' ')
-        print('y-axis:', *self.yvalues, sep=' ')
+        if self.xvalues == [] and self.yvalues == []:
+            print(f'\nError: {self.args.file} is missing the lines containing cBq and iBq')
+            sys.exit()
+        elif self.xvalues == []:
+            print(f'\nError: {self.args.file} is missing the lines containing cBq')
+            sys.exit()
+        elif self.yvalues == []:
+            print(f'\nError: {self.args.file} is missing the lines containing iBq')
+            sys.exit()
+
+        if self.args.verbose is True:
+            print('x-axis:', *self.xvalues, sep=' ')
+            print('y-axis:', *self.yvalues, sep=' ')
 
     def create_plot(self):
         try:
@@ -79,8 +83,8 @@ class Plotter:
             plt.plot(x, y)  # Plotting the points
             plt.show()  # Function to show the plot
 
-        except (IndexError, ValueError) as error:
-            print('\nThere was an error in plotting the graph:')
+        except (ValueError, IndexError) as error:
+            print('\nThere was an error with plotting the graph:')
             print(error)
 
 
