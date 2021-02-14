@@ -15,14 +15,14 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 <br  />
 <br  />
 
-<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/ACID_plan.png" width="300"> 
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/ACID_plan.png" width="300"> 
 
 *Figure 1*
 <br  />
 <br  />
 
 
-<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/NICS_plan.png" width="300">
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/NICS_plan.png" width="300">
 
 *Figure 2* 
 <br  />
