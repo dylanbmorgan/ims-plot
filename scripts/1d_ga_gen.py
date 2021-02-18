@@ -13,13 +13,13 @@ class InputGenerator:
         self.bq_coors = []
 
     def cli_cmds(self):
-        self.parser = argparse.ArgumentParser(description='Generates array of Bq atoms for Gaussian input files in 1D')
-        self.parser.add_argument('originalfile', help='original file to copy')
-        self.parser.add_argument('newfile', help='new file to write to')
-        self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
-                                 action='store_true',
-                                 help='print output of Bq coordinates to append to file')
-        self.args = self.parser.parse_args()
+        parser = argparse.ArgumentParser(description='Generates array of Bq atoms for Gaussian input files in 1D')
+        parser.add_argument('originalfile', help='original file to copy')
+        parser.add_argument('newfile', help='new file to write to')
+        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+                            action='store_true',
+                            help='print output of Bq coordinates to append to file')
+        self.args = parser.parse_args()
 
     def gen_bq_coors(self):
         try:

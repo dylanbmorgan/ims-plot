@@ -13,13 +13,14 @@ class InputGenerator:
         self.bq_coors = []
 
     def cli_cmds(self):
-        self.parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
-        self.parser.add_argument('originalfile', help='original file to copy')
-        self.parser.add_argument('newfile', help='new file to write to')
-        self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
-                                 action='store_true',
-                                 help='print output of Bq coordinates to append to file')
-        self.args = self.parser.parse_args()
+        parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
+        parser.add_argument('originalfile', help='original file to copy')
+        parser.add_argument('newfile', help='new file to write to')
+        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+                            action='store_true',
+                            help='print output of Bq coordinates to append to file')
+
+        self.args = parser.parse_args()
 
     def gen_bq_coors(self):
         try:
@@ -28,15 +29,15 @@ class InputGenerator:
             bq_no = int(input('Specify number of ghost atoms (in 1 dimension): '))
 
             n0 = numpy.array(coor.split(), float)
-            deltaxyz = numpy.array(vs.split(), float)
-            deltax = numpy.array([deltaxyz[0], 0, 0])
-            deltay = numpy.array([0, deltaxyz[1], 0])  # Generates coors for file
+            delta_xyz = numpy.array(vs.split(), float)
+            delta_x = numpy.array([delta_xyz[0], 0, 0])
+            delta_y = numpy.array([0, delta_xyz[1], 0])  # Generates coors for file
 
             for xn in range(bq_no):
-                nx = n0 + xn * deltax
+                nx = n0 + xn * delta_x
 
                 for yn in range(bq_no):
-                    ny = n0 + yn * deltay
+                    ny = n0 + yn * delta_y
                     self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nx[2]}')  # Adds each coor as new line in new file
 
             if self.args.verbose is True:
