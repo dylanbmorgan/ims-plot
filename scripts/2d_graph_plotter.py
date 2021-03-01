@@ -4,7 +4,6 @@
 # Author: Dylan Morgan
 
 import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 import sys
 
@@ -15,6 +14,7 @@ class plotter:
         self.x_values = []
         self.y_values = []
         self.z_values = []
+        self.z_axis_label = '\u03B4 / ppm'
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Plots a contour plot to show isotropic NICS values from '
@@ -30,6 +30,10 @@ class plotter:
         axis_group.add_argument('-xz', '--xzplane',
                                 action='store_true',
                                 help='specify the plane the ghost atoms are plotted in as the xz-plane')
+
+        parser.add_argument('-sh', '--shielding',
+                            action='store_true',
+                            help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
 
         parser.add_argument('-f', '--file',
                             action='store_true',
@@ -79,27 +83,30 @@ class plotter:
             print(f'\nError: {self.args.file} is missing the lines containing iBq (isotropic NICS values)')
             sys.exit()
 
+        if self.args.shielding is True:
+            self.z_axis_label = 'Isotropic Magnetic Shielding Tensor / ppm'
+            pass
+        else:
+            for chg_sign, num in enumerate(self.z_values):
+                self.z_values[chg_sign] = num * -1
+
         if self.args.verbose is True:
             print('x-axis:', *self.x_values, sep=' ')
             print('y-axis:', *self.y_values, sep=' ')
             print('z-axis:', *self.z_values, sep=' ')
 
     def create_plot(self):
+        x = self.x_values
+        y = self.y_values
+        z = self.z_values
+
         try:
-            # for num in self.x_values:
-            #    x_list = np.linspace(num)
-
-            # for num in self.y_values:
-            #    y_list = np.linspace(num)
-
-            X, Y, Z = np.meshgrid(self.x_values, self.y_values, self.z_values)
-            fig, ax = plt.subplots()
-            CP = ax.contour(X, Y, Z)  # see: https://stackoverflow.com/questions/34113083/numpy-contour-typeerror-input-z-must-be-a-2d-array
-            ax.clabel(CP, inline=1, fontsize=10)
-            ax.set_title('Simplest default with labels')
+            plt.tricontourf(x, y, z)
+            #plt.clabel(CS, )
+            plt.show()
 
         except (ValueError, IndexError) as error:
-            print('\nThere was an error with plotting then graph:')
+            print('\nThere was an error with plotting the graph:')
             print(error)
 
 
