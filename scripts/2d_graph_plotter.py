@@ -102,7 +102,7 @@ class plotter:
 
         try:
             plt.tricontourf(x, y, z)
-            #plt.clabel(CS, )
+            #  plt.clabel(cp)
             plt.show()
 
         except (ValueError, IndexError) as error:
