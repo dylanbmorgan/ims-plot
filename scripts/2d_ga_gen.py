@@ -20,6 +20,18 @@ class InputGenerator:
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
 
+        plane = parser.add_mutually_exclusive_group(required=True)
+
+        plane.add_argument('-xy', '--xy_plane',
+                           action='store_true',
+                           help='specify the coordinate plane as the xy plane')
+        plane.add_argument('-xz', '--xz_plane',
+                           action='store_true',
+                           help='specify the coordinate plane as the xz plane')
+        plane.add_argument('-yz', '--yz_plane',
+                           action='store_true',
+                           help='specify the coordinate plane as the yz plane')
+
         self.args = parser.parse_args()
 
     def gen_bq_coors(self):
@@ -30,15 +42,25 @@ class InputGenerator:
 
             n0 = numpy.array(coor.split(), float)
             delta_xyz = numpy.array(vs.split(), float)
-            delta_x = numpy.array([delta_xyz[0], 0, 0])
-            delta_y = numpy.array([0, delta_xyz[1], 0])  # Generates coors for file
+            # delta_1 = numpy.array([delta_xyz[0], 0, 0])
+            # delta_2 = numpy.array([0, delta_xyz[1], 0])
+            # delta_3 = numpy.array([0, 0, delta_xyz[1]])  # Generates coors for file
 
-            for xn in range(bq_no):
-                nx = n0 + xn * delta_x
+            if self.args.xy_plane is True:
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
 
-                for yn in range(bq_no):
-                    ny = n0 + yn * delta_y
-                    self.bq_coors.append(f'Bq {nx[0]} {ny[1]} {nx[2]}')  # Adds each coor as new line in new file
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {yn[1]} {xn[2]}')  # Adds each coor as new line in new file
+
+            elif self.args.xz_plane or self.args.yz_plane is True:
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
+
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {xn[1]} {yn[2]}')
 
             if self.args.verbose is True:
                 print('\nOutput:\n')  # Shows usr list of coors generated
