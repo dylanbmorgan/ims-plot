@@ -21,61 +21,45 @@ class InputGenerator:
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
 
-        plane = parser.add_mutually_exclusive_group(required=True)
-
-        plane.add_argument('-xy', '--xy_plane',
-                           action='store_true',
-                           help='specify the coordinate plane as the xy plane')
-        plane.add_argument('-xz', '--xz_plane',
-                           action='store_true',
-                           help='specify the coordinate plane as the xz plane')
-        plane.add_argument('-yz', '--yz_plane',
-                           action='store_true',
-                           help='specify the coordinate plane as the yz plane')
-
         self.args = parser.parse_args()
 
     def gen_bq_coors(self):
         try:
-            start_pos = input('\nEnter start coordinates (x, y, z) for first ghost atom separated by spaces: ')
-            end_pos = input('Enter end coordinates (x, y, z) for the last ghost atom separated by spaces: ')
+            start_pos = input('\nEnter coordinates (x, y, z) for first ghost atom separated by spaces: ')
             vec_space = input('Specify vector spacings (x, y, z) separated by spaces: ')
-            # Will only work if 3rd direction == 0
+            bq_no = int(input('Specify the number of ghost atoms (in 1 dimension): '))
 
-            start = numpy.array(start_pos.split(), float)
-            end = numpy.array(end_pos.split(), float)
-            vs = numpy.array(vec_space.split(), float)
+            origin = numpy.array(start_pos.split(), float)
+            vs_split = numpy.array(vec_space.split(), float)
 
-            if self.args.xy_plane is True:
-                vec1 = numpy.array([vs[0], 0, 0])
-                vec2 = numpy.array([0, vs[1], 0])
-                const = numpy.array([0, 0, vs[2]])
-            elif self.args.xz_plane is True:
-                vec1 = numpy.array([vs[0], 0, 0])
-                vec2 = numpy.array([0, 0, vs[2]])
-                const = numpy.array([0, vs[1], 0])
-            elif self.args.yz_plane is True:
-                vec1 = numpy.array([0, vs[1], 0])
-                vec2 = numpy.array([0, 0, vs[2]])
-                const = numpy.array([vs[0], 0, 0])
-            # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
+            x_vec = numpy.array([vs_split[0], 0, 0])
+            y_vec = numpy.array([0, vs_split[1], 0])
+            z_vec = numpy.array([0, 0, vs_split[2]])
 
-            coors = []
-            origin = numpy.array([0, 0, 0])
+            print(x_vec)
+            print(y_vec)
+            print(z_vec)
 
-            for n1 in range(int(start[0]), int(end[0])):
-                for n2 in range(int(start[1]), int(end[1])):  # Fix problem with not working for planes other than xy
-                    coors += [origin + n1*vec1 + n2*vec2 + const]
+            if x_vec == [0, 0, 0]:
+                array_1 = y_vec
+                array_2 = z_vec
+            elif y_vec == numpy.array([0, 0, 0]):
+                array_1 = x_vec
+                array_2 = z_vec
+            elif z_vec == numpy.array([0, 0, 0]):
+                array_1 = x_vec
+                array_2 = y_vec
 
-            print(coors)
+            print(array_1)
+            print(array_2)
 
-            for coor in coors:
-                self.bq_coors.append(f'Bq {coor[0]} {coor[1]} {coor[2]}')
+            for n1 in range(numpy.nonzero(array_1), bq_no):
+                for n2 in range(numpy.nonzero(array_2), bq_no):
+                    self.bq_coors += [origin + n1 * array_1 + n2 * array_2]
 
             if self.args.verbose is True:
-                print('\nOutput:\n')
+                print('\nOutput:\n')  # Shows usr list of coors generated
                 print(*self.bq_coors, sep='\n')  # Is there a way to pipe this to less instead? eg. print... | less
-                # Shows usr list of coors generated
 
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')

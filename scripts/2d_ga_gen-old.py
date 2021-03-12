@@ -37,45 +37,32 @@ class InputGenerator:
 
     def gen_bq_coors(self):
         try:
-            start_pos = input('\nEnter start coordinates (x, y, z) for first ghost atom separated by spaces: ')
-            end_pos = input('Enter end coordinates (x, y, z) for the last ghost atom separated by spaces: ')
-            vec_space = input('Specify vector spacings (x, y, z) separated by spaces: ')
-            # Will only work if 3rd direction == 0
+            coor = input('\nEnter coordinates (x, y, z) for first ghost atom separated by spaces: ')
+            vs = input('Specify vector spacings (x, y, z) separated by spaces: ')
+            bq_no = int(input('Specify number of ghost atoms (in 1 dimension): '))
 
-            start = numpy.array(start_pos.split(), float)
-            end = numpy.array(end_pos.split(), float)
-            vs = numpy.array(vec_space.split(), float)
+            n0 = numpy.array(coor.split(), float)
+            delta_xyz = numpy.array(vs.split(), float)
 
             if self.args.xy_plane is True:
-                vec1 = numpy.array([vs[0], 0, 0])
-                vec2 = numpy.array([0, vs[1], 0])
-                const = numpy.array([0, 0, vs[2]])
-            elif self.args.xz_plane is True:
-                vec1 = numpy.array([vs[0], 0, 0])
-                vec2 = numpy.array([0, 0, vs[2]])
-                const = numpy.array([0, vs[1], 0])
-            elif self.args.yz_plane is True:
-                vec1 = numpy.array([0, vs[1], 0])
-                vec2 = numpy.array([0, 0, vs[2]])
-                const = numpy.array([vs[0], 0, 0])
-            # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
 
-            coors = []
-            origin = numpy.array([0, 0, 0])
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {yn[1]} {xn[2]}')  # Adds each coor as new line in new file
 
-            for n1 in range(int(start[0]), int(end[0])):
-                for n2 in range(int(start[1]), int(end[1])):  # Fix problem with not working for planes other than xy
-                    coors += [origin + n1*vec1 + n2*vec2 + const]
+            elif self.args.xz_plane or self.args.yz_plane is True:  # Crude fix. Will aim to improve before 1st release
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
 
-            print(coors)
-
-            for coor in coors:
-                self.bq_coors.append(f'Bq {coor[0]} {coor[1]} {coor[2]}')
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {xn[1]} {yn[2]}')
 
             if self.args.verbose is True:
-                print('\nOutput:\n')
+                print('\nOutput:\n')  # Shows usr list of coors generated
                 print(*self.bq_coors, sep='\n')  # Is there a way to pipe this to less instead? eg. print... | less
-                # Shows usr list of coors generated
 
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')
