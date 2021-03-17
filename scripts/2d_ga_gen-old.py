@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 2D Ghost Atom Generator
+# 2D Ghost Atom Generator (OLD)
 # 2d_ga_gen.py
 # Generates 2D array of Bq atoms for Gaussian input files
 # Author: Dylan Morgan
