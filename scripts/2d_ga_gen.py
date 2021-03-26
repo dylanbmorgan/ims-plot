@@ -51,27 +51,24 @@ class InputGenerator:
                 s_coor_2 = start[1]
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
-                vec1 = numpy.array([vs[0], 0., 0.])
-                vec2 = numpy.array([0., vs[1], 0.])
-                # coors = [[float(s_coor_1), float(s_coor_2), float(start[2])]]
+                vec1 = numpy.array([1., 0., 0.])  # Always has to be 1
+                vec2 = numpy.array([0., 1., 0.])
 
             elif self.args.xz_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[2]
                 e_coor_1 = end[0]
                 e_coor_2 = end[2]
-                vec1 = numpy.array([vs[0], 0., 0.])
-                vec2 = numpy.array([0., 0., vs[2]])
-                # coors = [[float(s_coor_1), float(start[1]), float(s_coor_2)]]
+                vec1 = numpy.array([1, 0., 0.])
+                vec2 = numpy.array([0., 0., 1])
 
             elif self.args.yz_plane is True:
                 s_coor_1 = start[1]
                 s_coor_2 = start[2]
                 e_coor_1 = end[1]
                 e_coor_2 = end[2]
-                vec1 = numpy.array([0., vs[1], 0.])
-                vec2 = numpy.array([0., 0., vs[2]])
-                # coors = [[float(start[0]), float(s_coor_1), float(s_coor_2)]]
+                vec1 = numpy.array([0., 1, 0.])
+                vec2 = numpy.array([0., 0., 1])
             # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
 
             coors = []
@@ -128,6 +125,9 @@ class InputGenerator:
             # Auto generates atoms for geom=connectivity
             # Tells Gaussian not to form bonds between Bqs
 
+        # self.all_bqs.remove([-])
+        # Remove the last nums from the list specified by the usr
+
         if self.args.verbose is True:
             print()
             print(*self.all_bqs, sep='\n')  # Print
@@ -152,7 +152,8 @@ class InputGenerator:
                 for coor in self.bq_coors:
                     copy.write(f'{coor}\n')
 
-                copy.write('\n ')
+                copy.write(' \n')
+                copy.write('**** LEAVE A BLANK LINE BEFORE HERE ****\n')
                 copy.write('**** INSERT GEOM=CONNECTIVITY INFO HERE ****\n')
                 copy.write(' \n')
 
@@ -168,7 +169,7 @@ class InputGenerator:
                     print(f'\nContents of file:\n\n{contents}')
 
         print('Task completed successfully!')
-        print('Remember to fill in the geom=connectivity information in the generated file')
+        print('Remember to fill in the geom=connectivity information in the generated file.')
 
 
 if __name__ == '__main__':
