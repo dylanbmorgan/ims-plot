@@ -18,9 +18,16 @@ class InputGenerator:
         parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('originalfile', help='original file to copy')
         parser.add_argument('newfile', help='new file to write to')
-        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+        parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
+
+        '''
+        TODO: Integrate the following:
+        parser.add_argument('-c', '--connectivity',
+                            action='store_true',
+                            help='Include information for ghost atoms as part of geom=connectivity if this is to be'
+                            'used') '''
 
         plane = parser.add_mutually_exclusive_group(required=True)
 
@@ -90,7 +97,7 @@ class InputGenerator:
         except (IndexError, ValueError, TypeError) as error:
             print('\nThere was an error in interpreting your input:')
             print(error)
-            print('\nPlease try again:')
+            print('\nPlease try again (or press ctrl+c to exit):')
             self.bq_coors.clear()
             self.gen_bq_coors()
 
@@ -116,7 +123,7 @@ class InputGenerator:
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')
             print(error)
-            print('\nPlease try again:')
+            print('\nPlease try again (or press ctrl+c to exit):')
             self.enumerate_geom()
 
         for line in self.bq_coors:
@@ -125,8 +132,7 @@ class InputGenerator:
             # Auto generates atoms for geom=connectivity
             # Tells Gaussian not to form bonds between Bqs
 
-        # self.all_bqs.remove([-])
-        # Remove the last nums from the list specified by the usr
+        # TODO: Remove the last nums from the list specified by the usr
 
         if self.args.verbose is True:
             print()
