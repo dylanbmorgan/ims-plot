@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 2D Ghost Atom Generator
-# 2d_ga_gen.py
+# 2d_ga_gen-old.py
 # Generates 2D array of Bq atoms for Gaussian input files
 # Authors: Dylan Morgan & Dr Felix Plasser
 
@@ -18,16 +18,9 @@ class InputGenerator:
         parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('originalfile', help='original file to copy')
         parser.add_argument('newfile', help='new file to write to')
-        parser.add_argument('-v', '--verbose',
+        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
-
-        '''
-        TODO: Integrate the following:
-        parser.add_argument('-c', '--connectivity',
-                            action='store_true',
-                            help='Include information for ghost atoms as part of geom=connectivity if this is to be'
-                            'used') '''
 
         plane = parser.add_mutually_exclusive_group(required=True)
 
@@ -45,59 +38,37 @@ class InputGenerator:
 
     def gen_bq_coors(self):
         try:
-            start_pos = input('\nEnter start coordinates (x, y, z) for first ghost atom separated by spaces: ')
-            end_pos = input('Enter end coordinates (x, y, z) for the last ghost atom separated by spaces: ')
-            vec_space = input('Specify the 2 vector spacings separated by spaces: ')
+            coor = input('\nEnter coordinates (x, y, z) for first ghost atom separated by spaces: ')
+            vs = input('Specify vector spacings (x, y, z) separated by spaces: ')
+            bq_no = int(input('Specify number of ghost atoms (in 1 dimension): '))
 
-            start = numpy.array(start_pos.split(), float)
-            end = numpy.array(end_pos.split(), float)
-            vs = numpy.array(vec_space.split(), float)
+            n0 = numpy.array(coor.split(), float)
+            delta_xyz = numpy.array(vs.split(), float)
 
             if self.args.xy_plane is True:
-                s_coor_1 = start[0]
-                s_coor_2 = start[1]
-                e_coor_1 = end[0]
-                e_coor_2 = end[1]
-                vec1 = numpy.array([1., 0., 0.])  # Always has to be 1
-                vec2 = numpy.array([0., 1., 0.])
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
 
-            elif self.args.xz_plane is True:
-                s_coor_1 = start[0]
-                s_coor_2 = start[2]
-                e_coor_1 = end[0]
-                e_coor_2 = end[2]
-                vec1 = numpy.array([1, 0., 0.])
-                vec2 = numpy.array([0., 0., 1])
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {yn[1]} {xn[2]}')  # Adds each coor as new line in new file
 
-            elif self.args.yz_plane is True:
-                s_coor_1 = start[1]
-                s_coor_2 = start[2]
-                e_coor_1 = end[1]
-                e_coor_2 = end[2]
-                vec1 = numpy.array([0., 1, 0.])
-                vec2 = numpy.array([0., 0., 1])
-            # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
+            elif self.args.xz_plane or self.args.yz_plane is True:  # Crude fix. Will aim to improve before 1st release
+                for n1 in range(bq_no):
+                    xn = n0 + n1 * delta_xyz
 
-            coors = []
-
-            for i in numpy.arange(s_coor_1, e_coor_1 + vs[0], vs[0]):
-                for j in numpy.arange(s_coor_2, e_coor_2 + vs[1], vs[1]):
-                    coors += [i*vec1 + j*vec2]
-                    # Auto generates all Bq coors based off usr start and end coors
-                    # Auto defines no of Bqs based off usr vec spacings
-
-            for num in coors:
-                self.bq_coors.append(f'Bq {num[0]} {num[1]} {num[2]}')
+                    for n2 in range(bq_no):
+                        yn = n0 + n2 * delta_xyz
+                        self.bq_coors.append(f'Bq {xn[0]} {xn[1]} {yn[2]}')
 
             if self.args.verbose is True:
-                print('\nOutput:\n')
-                print(*self.bq_coors, sep='\n')
-                print(f'\nTotal number of ghost atoms: {len(self.bq_coors)}')  # Print coors in column format
+                print('\nOutput:\n')  # Shows usr list of coors generated
+                print(*self.bq_coors, sep='\n')  # Is there a way to pipe this to less instead? eg. print... | less
 
         except (IndexError, ValueError, TypeError) as error:
             print('\nThere was an error in interpreting your input:')
             print(error)
-            print('\nPlease try again (or press ctrl+c to exit):')
+            print('\nPlease try again:')
             self.bq_coors.clear()
             self.gen_bq_coors()
 
@@ -117,22 +88,20 @@ class InputGenerator:
 
     def enumerate_geom(self):
         try:
-            index = 0
-            index = int(input('\nSpecify the number of non-Bq atoms to be defined in geom=connectivity: '))
+            index = 0  # Check if this is needed
+            index = int(input('\nSpecify the number of non-Bq atoms to be defined in geom=ModConnectivity: '))
 
-        except (IndexError, ValueError) as error:
+        except (IndexError, ValueError, TypeError) as error:
             print('\nThere was an error in interpreting your input:')
             print(error)
-            print('\nPlease try again (or press ctrl+c to exit):')
+            print('\nPlease try again:')
             self.enumerate_geom()
 
         for line in self.bq_coors:
             index += 1
             self.all_bqs.append(index)
-            # Auto generates atoms for geom=connectivity
+            # Auto generates atoms for geom=ModConnectivity
             # Tells Gaussian not to form bonds between Bqs
-
-        # TODO: Remove the last nums from the list specified by the usr
 
         if self.args.verbose is True:
             print()
@@ -157,12 +126,6 @@ class InputGenerator:
                     copy.write(line)
                 for coor in self.bq_coors:
                     copy.write(f'{coor}\n')
-
-                copy.write(' \n')
-                copy.write('**** LEAVE A BLANK LINE BEFORE HERE ****\n')
-                copy.write('**** INSERT GEOM=CONNECTIVITY INFO HERE ****\n')
-                copy.write(' \n')
-
                 for line in self.all_bqs:
                     copy.write(f'{line}\n')
 
@@ -175,7 +138,6 @@ class InputGenerator:
                     print(f'\nContents of file:\n\n{contents}')
 
         print('Task completed successfully!')
-        print('Remember to fill in the geom=connectivity information in the generated file.')
 
 
 if __name__ == '__main__':
