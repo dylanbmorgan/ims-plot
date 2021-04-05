@@ -6,18 +6,19 @@
 
 import numpy
 import argparse
+import glob
 
 
 class InputGenerator:
 
     def __init__(self):
         self.bq_coors = []
-        self.all_bqs = []
+        # self.all_bqs = []
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('originalfile', help='original file to copy')
-        parser.add_argument('newfile', help='new file to write to')
+        parser.add_argument('newfile', help='new file to write to (do not include the file extension)')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
@@ -131,7 +132,6 @@ class InputGenerator:
             self.all_bqs.append(index)
             # Auto generates atoms for geom=connectivity
             # Tells Gaussian not to form bonds between Bqs
-
         # TODO: Remove the last nums from the list specified by the usr
 
         if self.args.verbose is True:
@@ -151,31 +151,30 @@ class InputGenerator:
             ig.check_2()
 
     def copy_inp(self):
-        with open(self.args.originalfile) as original:
-            with open(self.args.newfile, "w+") as copy:
-                for line in original:
-                    copy.write(line)
-                for coor in self.bq_coors:
-                    copy.write(f'{coor}\n')
+        with open(self.args.originalfile) as originalfile:
 
-                copy.write(' \n')
-                copy.write('**** LEAVE A BLANK LINE BEFORE HERE ****\n')
-                copy.write('**** INSERT GEOM=CONNECTIVITY INFO HERE ****\n')
-                copy.write(' \n')
+            def split_lines_gen(lines):
+                for coors in range(0, len(lines), 100):
+                    yield lines[coors: coors + 100]
 
-                for line in self.all_bqs:
-                    copy.write(f'{line}\n')
+            for index, lines in enumerate(split_lines_gen(self.bq_coors)):
+                with open(f'./{str(self.args.newfile)}_{str(index + 1)}.com', 'w') as nextfile:
+                    nextfile.write('\n'.join(lines))
+                    nextfile.write('\n ')
 
-                copy.write(' ')
+            with open(glob.glob(f'./{self.args.newfile}_[1-9].com'), 'w+') as file:
+                file.seek(0, 0)
+                for line in originalfile:
+                    file.write(line)
 
         if self.args.verbose is True:
-            with open(self.args.newfile, "r") as copy:
-                if copy.mode == "r":
-                    contents = copy.read()
-                    print(f'\nContents of file:\n\n{contents}')
+            with open(f'*{self.args.newfile}*', 'r') as copy:  # fix this bit
+                # if copy.mode == 'r':
+                contents = copy.read()
+                print(f'\nContents of file(s):\n\n{contents}')
 
         print('Task completed successfully!')
-        print('Remember to fill in the geom=connectivity information in the generated file.')
+        print('Remember to fill in the geom=connectivity information in the generated file')
 
 
 if __name__ == '__main__':
@@ -183,6 +182,6 @@ if __name__ == '__main__':
     ig.cli_cmds()
     ig.gen_bq_coors()
     ig.check_1()
-    ig.enumerate_geom()
-    ig.check_2()
+    # ig.enumerate_geom()
+    # ig.check_2()
     ig.copy_inp()
