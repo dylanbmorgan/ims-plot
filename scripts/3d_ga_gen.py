@@ -12,12 +12,12 @@ class InputGenerator:
 
     def __init__(self):
         self.bq_coors = []
-        self.all_bqs = []
+        # self.all_bqs = []
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 3D')
-        parser.add_argument('originalfile', help='original file to copy')
-        parser.add_argument('newfile', help='new file to write to')
+        parser.add_argument('startfile', help='original file to copy')
+        parser.add_argument('newfiles', help='new file to write to')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
@@ -30,6 +30,8 @@ class InputGenerator:
                             'used') '''
 
         self.args = parser.parse_args()
+
+    # TODO: Add argparse to generate ghost atoms in the same way as the 2d script
 
     def gen_bq_coors(self):
         try:
@@ -57,6 +59,7 @@ class InputGenerator:
             if self.args.verbose is True:
                 print('\nOutput:\n')  # Shows usr list of coors generated
                 print(*self.bq_coors, sep='\n')
+                print(f'\nTotal number of ghost atoms: {len(self.bq_coors)}')  # Print coors in column format
 
         except (IndexError, ValueError) as error:
             print('\nThere was an error in interpreting your input:')
@@ -72,11 +75,11 @@ class InputGenerator:
             pass
         elif cont.lower() == 'n' or cont.lower() == 'no':
             self.bq_coors.clear()
-            self.all_bqs
+            # self.all_bqs
             self.gen_bq_coors()
             ig.check_1()
         else:
-            print('Not a valid answer')
+            print('\nNot a valid answer')
             ig.check_1()
 
     def enumerate_geom(self):
@@ -114,31 +117,22 @@ class InputGenerator:
             print('Not a valid answer')
             ig.check_2()
 
-    def copy_inp(self):
-        with open(self.args.originalfile) as original:
-            with open(self.args.newfile, "w+") as copy:
-                for line in original:
-                    copy.write(line)
-                for coor in self.bq_coors:
-                    copy.write(f'{coor}\n')
+    def write_files(self):
+        def split_lines_gen(lines):
+            for coors in range(0, len(lines), 99):
+                yield lines[coors: coors + 99]
 
-                copy.write(' \n')
-                copy.write('**** LEAVE A BLANK LINE BEFORE HERE ****\n')
-                copy.write('**** INSERT GEOM=CONNECTIVITY INFO HERE ****\n')
-                copy.write(' \n')
+        for index, lines in enumerate(split_lines_gen(self.bq_coors)):
+            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
+                with open(self.args.startfile) as start:
+                    for info in start:
+                        newfiles.write(info)
 
-                for line in self.all_bqs:
-                    copy.write(f'{line}\n')
+                newfiles.write('\n'.join(lines))
+                newfiles.write('\n ')
 
-                copy.write(' ')
-
-        if self.args.verbose is True:
-            with open(self.args.newfile, "r") as copy:
-                if copy.mode == "r":
-                    contents = copy.read()
-                    print(f'\nContents of file:\n\n{contents}')
-
-        print('Task completed successfully!')
+        print('\nTask completed successfully!')
+        # print('Remember to fill in the geom=connectivity information in the generated file')
 
 
 if __name__ == '__main__':
@@ -146,6 +140,6 @@ if __name__ == '__main__':
     ig.cli_cmds()
     ig.gen_bq_coors()
     ig.check_1()
-    ig.enumerate_geom()
-    ig.check_2()
-    ig.copy_inp()
+    # ig.enumerate_geom()
+    # ig.check_2()
+    ig.write_files()
