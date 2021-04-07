@@ -58,31 +58,37 @@ class InputGenerator:
                 s_coor_2 = start[1]
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
+                other = start[2]
                 vec1 = numpy.array([1., 0., 0.])  # Always has to be 1
                 vec2 = numpy.array([0., 1., 0.])
+                const = numpy.array([0., 0., other])
 
             elif self.args.xz_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[2]
                 e_coor_1 = end[0]
                 e_coor_2 = end[2]
+                other = start[1]
                 vec1 = numpy.array([1, 0., 0.])
                 vec2 = numpy.array([0., 0., 1])
+                const = numpy.array([0., other, 0.])
 
             elif self.args.yz_plane is True:
                 s_coor_1 = start[1]
                 s_coor_2 = start[2]
                 e_coor_1 = end[1]
                 e_coor_2 = end[2]
+                other = start[0]
                 vec1 = numpy.array([0., 1, 0.])
                 vec2 = numpy.array([0., 0., 1])
+                const = numpy.array([other, 0., 0.])
             # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
 
             coors = []
 
             for i in numpy.arange(s_coor_1, e_coor_1 + vs[0], vs[0]):
                 for j in numpy.arange(s_coor_2, e_coor_2 + vs[1], vs[1]):
-                    coors += [i*vec1 + j*vec2]
+                    coors += [i*vec1 + j*vec2 + const]
                     # Auto generates all Bq coors based off usr start and end coors
                     # Auto defines no of Bqs based off usr vec spacings
 
