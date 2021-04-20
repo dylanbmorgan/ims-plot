@@ -9,19 +9,24 @@ import argparse
 
 
 class InputGenerator:
-
     def __init__(self):
         self.bq_coors = []
         # self.all_bqs = []
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
+        parser = argparse.ArgumentParser(
+            description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('startfile', help='original file to copy')
-        parser.add_argument('newfiles', help='new file(s) to write to (do not include the file extension)')
+        parser.add_argument('newfiles',
+                            help='new file(s) to write to (do not include the file extension)')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
-
+        parser.add_argument('-n', '--number',
+                            type=int,
+                            nargs='?',
+                            default=80,
+                            help='specify the number of ghost atoms to write per file')
         '''
         TODO: Integrate the following:
         parser.add_argument('-c', '--connectivity',
@@ -88,7 +93,7 @@ class InputGenerator:
 
             for i in numpy.arange(s_coor_1, e_coor_1 + vs[0], vs[0]):
                 for j in numpy.arange(s_coor_2, e_coor_2 + vs[1], vs[1]):
-                    coors += [i*vec1 + j*vec2 + const]
+                    coors += [i * vec1 + j * vec2 + const]
                     # Auto generates all Bq coors based off usr start and end coors
                     # Auto defines no of Bqs based off usr vec spacings
 
@@ -158,11 +163,15 @@ class InputGenerator:
 
     def write_files(self):
         def split_lines_gen(lines):
-            for coors in range(0, len(lines), 99):
-                yield lines[coors: coors + 99]
+            for coors in range(0, len(lines), self.args.number):
+                yield lines[coors:coors + self.args.number]
+
+        total_files = []
 
         for index, lines in enumerate(split_lines_gen(self.bq_coors)):
-            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
+            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com',
+                      'w+') as newfiles:
+                total_files.append(newfiles)
                 with open(self.args.startfile) as start:
                     for info in start:
                         newfiles.write(info)
@@ -170,7 +179,7 @@ class InputGenerator:
                 newfiles.write('\n'.join(lines))
                 newfiles.write('\n ')
 
-        print('\nTask completed successfully!')
+        print(f'\nTask completed successfully!\n{len(total_files)} new files were created')
         # print('Remember to fill in the geom=connectivity information in the generated file')
 
 
