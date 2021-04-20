@@ -49,16 +49,13 @@ usr_verification () {
 parse_files () {
     echo -e "\nparsing data from ${#log_files[@]} files..."
     
-    until [ $(seq 1 ${#log_files[@]}) ]; do 
-
-    for 
-
-    for num com log in $com_files $log_files 
-        "log_parser.py $com $log -o .parsed_data_$num.txt"
-    done &&
+    for num in ${arg_files[@]}; do
+        for (( j=0; j=<${#com_files}; j++ )); do
+            "log_parser.py ${com_files[$j]} ${log_files[$j]} -o .parsed_data_$num.txt"
+        done
+    done &&  # Need to test when internet is fully working again 
 
     echo -e "\nPopty ping!\n" || 
-    echo -e "\nThere was an issue with running 1 or more of the files. Check your input files to make sure there are no errors.
-    Otherwise, try reducing the number of ghost atoms per input file.\n"  # Change these lines
+    echo -e "\nThere was an issue with running 1 or more of the files..."
 }
 
