@@ -9,19 +9,24 @@ import argparse
 
 
 class InputGenerator:
-
     def __init__(self):
         self.bq_coors = []
-        self.all_bqs = []
+        # self.all_bqs = []
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
-        parser.add_argument('originalfile', help='original file to copy')
-        parser.add_argument('newfile', help='new file to write to')
+        parser = argparse.ArgumentParser(
+            description='Generates Bq atoms for Gaussian input files in 2D')
+        parser.add_argument('startfile', help='original file to copy')
+        parser.add_argument('newfiles',
+                            help='new file(s) to write to (do not include the file extension)')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
-
+        parser.add_argument('-n', '--number',
+                            type=int,
+                            nargs='?',
+                            default=80,
+                            help='specify the number of ghost atoms to write per file')
         '''
         TODO: Integrate the following:
         parser.add_argument('-c', '--connectivity',
@@ -58,31 +63,37 @@ class InputGenerator:
                 s_coor_2 = start[1]
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
+                other = start[2]
                 vec1 = numpy.array([1., 0., 0.])  # Always has to be 1
                 vec2 = numpy.array([0., 1., 0.])
+                const = numpy.array([0., 0., other])
 
             elif self.args.xz_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[2]
                 e_coor_1 = end[0]
                 e_coor_2 = end[2]
+                other = start[1]
                 vec1 = numpy.array([1, 0., 0.])
                 vec2 = numpy.array([0., 0., 1])
+                const = numpy.array([0., other, 0.])
 
             elif self.args.yz_plane is True:
                 s_coor_1 = start[1]
                 s_coor_2 = start[2]
                 e_coor_1 = end[1]
                 e_coor_2 = end[2]
+                other = start[0]
                 vec1 = numpy.array([0., 1, 0.])
                 vec2 = numpy.array([0., 0., 1])
+                const = numpy.array([other, 0., 0.])
             # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
 
             coors = []
 
             for i in numpy.arange(s_coor_1, e_coor_1 + vs[0], vs[0]):
                 for j in numpy.arange(s_coor_2, e_coor_2 + vs[1], vs[1]):
-                    coors += [i*vec1 + j*vec2]
+                    coors += [i * vec1 + j * vec2 + const]
                     # Auto generates all Bq coors based off usr start and end coors
                     # Auto defines no of Bqs based off usr vec spacings
 
@@ -108,11 +119,11 @@ class InputGenerator:
             pass
         elif cont.lower() == 'n' or cont.lower() == 'no':
             self.bq_coors.clear()
-            self.all_bqs.clear()
+            # self.all_bqs.clear()
             self.gen_bq_coors()
             ig.check_1()
         else:
-            print('Not a valid answer')
+            print('\nNot a valid answer')
             ig.check_1()
 
     def enumerate_geom(self):
@@ -147,35 +158,29 @@ class InputGenerator:
             self.enumerate_geom()
             ig.check_2()
         else:
-            print('Not a valid answer')
+            print('\nNot a valid answer')
             ig.check_2()
 
-    def copy_inp(self):
-        with open(self.args.originalfile) as original:
-            with open(self.args.newfile, "w+") as copy:
-                for line in original:
-                    copy.write(line)
-                for coor in self.bq_coors:
-                    copy.write(f'{coor}\n')
+    def write_files(self):
+        def split_lines_gen(lines):
+            for coors in range(0, len(lines), self.args.number):
+                yield lines[coors:coors + self.args.number]
 
-                copy.write(' \n')
-                copy.write('**** LEAVE A BLANK LINE BEFORE HERE ****\n')
-                copy.write('**** INSERT GEOM=CONNECTIVITY INFO HERE ****\n')
-                copy.write(' \n')
+        total_files = []
 
-                for line in self.all_bqs:
-                    copy.write(f'{line}\n')
+        for index, lines in enumerate(split_lines_gen(self.bq_coors)):
+            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com',
+                      'w+') as newfiles:
+                total_files.append(newfiles)
+                with open(self.args.startfile) as start:
+                    for info in start:
+                        newfiles.write(info)
 
-                copy.write(' ')
+                newfiles.write('\n'.join(lines))
+                newfiles.write('\n ')
 
-        if self.args.verbose is True:
-            with open(self.args.newfile, "r") as copy:
-                if copy.mode == "r":
-                    contents = copy.read()
-                    print(f'\nContents of file:\n\n{contents}')
-
-        print('Task completed successfully!')
-        print('Remember to fill in the geom=connectivity information in the generated file.')
+        print(f'\nTask completed successfully!\n{len(total_files)} new files were created')
+        # print('Remember to fill in the geom=connectivity information in the generated file')
 
 
 if __name__ == '__main__':
@@ -183,6 +188,6 @@ if __name__ == '__main__':
     ig.cli_cmds()
     ig.gen_bq_coors()
     ig.check_1()
-    ig.enumerate_geom()
-    ig.check_2()
-    ig.copy_inp()
+    # ig.enumerate_geom()
+    # ig.check_2()
+    ig.write_files()

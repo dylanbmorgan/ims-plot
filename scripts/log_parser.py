@@ -15,18 +15,18 @@ class LogParser:
         self.tensors = []
 
     def cli_cmds(self):
-        self.parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to '
-                                              './.parsed_log_data.txt')
-        self.parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
-        self.parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
-        self.parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
-                                 action='store_true',
-                                 help='print output of file containing parsed data')
-        self.parser.add_argument('-w', '--writename',
-                                 action='store_true',
-                                 default='.parsed_log_data.txt',
-                                 help='specify custom name to save parsed log data file as')
-        self.args = self.parser.parse_args()
+        parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to '
+                                         f'{pathlib.Path().absolute()}/.parsed_log_data.txt')
+        parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
+        parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
+        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+                            action='store_true',
+                            help='print output of file containing parsed data')
+        parser.add_argument('-o', '--output_filename',  # Change this so that it works (like the 2d_ga_gen script)
+                            nargs='?',
+                            default='.parsed_log_data.txt',
+                            help='specify custom name to save parsed log data file as')
+        self.args = parser.parse_args()
 
     def read_coors(self):
         with open(self.args.inpfile) as comfile:
@@ -66,7 +66,7 @@ class LogParser:
                     break
 
     def copy_iso_values(self):
-        with open(self.args.writename, 'w+') as copy:
+        with open(self.args.output_filename, 'w+') as copy:
             copy.write('Parsed log data from Gaussian log file\nDO NOT edit the contents of this file!\n')
             copy.write('\nGhost Atom Coordinates:\n')
             for count, line in enumerate(self.coors, 1):  # Numerically specifies Bq atom
@@ -84,12 +84,12 @@ class LogParser:
                     copy.write(line)
 
         if self.args.verbose is True:
-            with open(self.args.writename, 'r') as copy:
+            with open(self.args.output_filename, 'r') as copy:
                 contents = copy.read()
                 print(contents)
 
         print(f'\nFinished parsing data from files: {self.args.inpfile} & {self.args.outfile}')
-        print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.writename}')
+        print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.output_filename}')
 
 
 if __name__ == '__main__':
