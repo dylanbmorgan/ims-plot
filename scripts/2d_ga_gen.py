@@ -25,7 +25,7 @@ class InputGenerator:
         parser.add_argument('-n', '--number',
                             type=int,
                             nargs='?',
-                            default=80,
+                            default=25,
                             help='specify the number of ghost atoms to write per file')
         '''
         TODO: Integrate the following:

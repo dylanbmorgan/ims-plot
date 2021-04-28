@@ -5,6 +5,8 @@
 
 import matplotlib.pyplot as plt
 import argparse
+import glob
+import os
 import sys
 
 
@@ -34,16 +36,15 @@ class plotter:
         parser.add_argument('-sh', '--shielding',
                             action='store_true',
                             help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
-
-        parser.add_argument('-f', '--file',
-                            action='store_true',
-                            default='.parsed_log_data.txt',
+        parser.add_argument('-f', '--filename',
+                            type=argparse.FileType('r'),
+                            nargs='+',
+                            default=glob.glob('.parsed_data*.txt'),
                             help='if a custom file name was given for the parsed log data, use this flag to '
                             'specify the name of that file')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print the values of the x and y axes of the plot')
-
         self.args = parser.parse_args()
 
     def append_coors(self):
@@ -58,14 +59,17 @@ class plotter:
             axis_y = 5
 
         try:
-            with open(self.args.file) as data:
-                for line in data:
-                    words = line.split()
-                    if 'cBq' in line:
-                        self.x_values.append(float(words[axis_x]))
-                        self.y_values.append(float(words[axis_y]))
-                    elif 'iBq' in line:
-                        self.z_values.append(float(words[2]))
+            for file in os.listdir('./'):
+                # if file == self.args.filename:
+                with open(file, 'r') as data:
+                    if data == self.args.filename:
+                        for line in data:
+                            words = line.split()
+                            if 'cBq' in line:
+                                self.x_values.append(float(words[axis_x]))
+                                self.y_values.append(float(words[axis_y]))
+                            elif 'iBq' in line:
+                                self.z_values.append(float(words[2]))
 
         except (FileNotFoundError, ValueError, IndexError) as error:
             print('\nThere was an issue with reading the parsed data:')
@@ -73,14 +77,14 @@ class plotter:
             sys.exit()
 
         if self.x_values == [] and self.z_values == []:
-            print(f'\nError: {self.args.file} is missing the lines containing cBq and iBq (ghost atom coordinates and '
-                  'isotropic NICS values')
+            print(f'\nError: {self.args.filename} is/are missing the lines containing cBq and iBq (ghost atom '
+                  'coordinates and isotropic NICS values')
             sys.exit()
         elif self.x_values == [] or self.y_values == []:
-            print(f'\nError: {self.args.file} is missing the lines containing cBq (ghost atom coordinates)')
+            print(f'\nError: {self.args.filename} is/are missing the lines containing cBq (ghost atom coordinates)')
             sys.exit()
         elif self.z_values == []:
-            print(f'\nError: {self.args.file} is missing the lines containing iBq (isotropic NICS values)')
+            print(f'\nError: {self.args.filename} is/are missing the lines containing iBq (isotropic NICS values)')
             sys.exit()
 
         if self.args.shielding is True:
