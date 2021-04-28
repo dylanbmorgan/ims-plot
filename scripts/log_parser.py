@@ -16,7 +16,7 @@ class LogParser:
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to '
-                                         f'{pathlib.Path().absolute()}/.parsed_log_data.txt')
+                                         f'{pathlib.Path().absolute()}/.parsed_data.txt')
         parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
         parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
         parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
@@ -24,7 +24,7 @@ class LogParser:
                             help='print output of file containing parsed data')
         parser.add_argument('-o', '--output_filename',  # Change this so that it works (like the 2d_ga_gen script)
                             nargs='?',
-                            default='.parsed_log_data.txt',
+                            default='.parsed_data.txt',
                             help='specify custom name to save parsed log data file as')
         self.args = parser.parse_args()
 
