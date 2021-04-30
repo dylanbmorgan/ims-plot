@@ -5,8 +5,6 @@
 
 import matplotlib.pyplot as plt
 import argparse
-import glob
-import os
 import sys
 
 
@@ -37,9 +35,7 @@ class plotter:
                             action='store_true',
                             help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
         parser.add_argument('-f', '--filename',
-                            type=argparse.FileType('r'),
-                            nargs='+',
-                            default=glob.glob('.parsed_data*.txt'),
+                            nargs='?',
                             help='if a custom file name was given for the parsed log data, use this flag to '
                             'specify the name of that file')
         parser.add_argument('-v', '--verbose',
@@ -59,17 +55,14 @@ class plotter:
             axis_y = 5
 
         try:
-            for file in os.listdir('./'):
-                # if file == self.args.filename:
-                with open(file, 'r') as data:
-                    if data == self.args.filename:
-                        for line in data:
-                            words = line.split()
-                            if 'cBq' in line:
-                                self.x_values.append(float(words[axis_x]))
-                                self.y_values.append(float(words[axis_y]))
-                            elif 'iBq' in line:
-                                self.z_values.append(float(words[2]))
+            with open(self.args.filename) as data:
+                for line in data:
+                    words = line.split()
+                    if 'cBq' in line:
+                        self.x_values.append(float(words[axis_x]))
+                        self.y_values.append(float(words[axis_y]))
+                    elif 'iBq' in line:
+                        self.z_values.append(float(words[2]))
 
         except (FileNotFoundError, ValueError, IndexError) as error:
             print('\nThere was an issue with reading the parsed data:')
@@ -78,7 +71,7 @@ class plotter:
 
         if self.x_values == [] and self.z_values == []:
             print(f'\nError: {self.args.filename} is/are missing the lines containing cBq and iBq (ghost atom '
-                  'coordinates and isotropic NICS values')
+                  'coordinates and isotropic NICS values)')
             sys.exit()
         elif self.x_values == [] or self.y_values == []:
             print(f'\nError: {self.args.filename} is/are missing the lines containing cBq (ghost atom coordinates)')
@@ -89,7 +82,7 @@ class plotter:
 
         if self.args.shielding is True:
             self.z_axis_label = 'Isotropic Magnetic Shielding Tensor / ppm'
-            pass
+            # pass
         else:
             for chg_sign, num in enumerate(self.z_values):
                 self.z_values[chg_sign] = num * -1
