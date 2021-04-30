@@ -3,62 +3,82 @@
 # Parse data from multiple log files at once
 # Author: Dylan Morgan
 
-specify_files
+arg_inp() {
+    arg_files=( "$@" )
 
-specify_files () {
-    echo -e "\nSpecify input (.com) files:"
-    read -e input_files
-    com_files+=($input_files)
-
-    echo -e "\nSpecify output (.log) files to parse:"
-    read -e output_files
-    log_files+=($output_files)
-
-    if [ "${#com_files[@]}" != "${#log_files[@]}" ]; then
-        echo -e "\n Input and output files do not match. Please re-enter:"
-        specify_files
-    else 
-        echo -e "\n${#com_files[@]} input and ${#log_files[@]} ouput files selected"
+    if [[ $# -eq 0 ]]; then
+        man_inp
+    else
+        for file in "${arg_files[@]}"; do
+            if [[ $file = *.com ]]; then
+                com_files+=("$file")
+            elif [[ $file = *.log ]]; then
+                log_files+=("$file")
+            else
+                echo -e "\nOne or more file(s) have the wrong extension or no extension."
+                echo "Specify the file(s) manually or press ctrl+c to exit."
+                man_inp
+            fi
+        done
         check_files
     fi
 }
 
-check_files () {
-    echo
-    read -p "Are these files correct? (y/n) " verify
+man_inp() {
+    echo -e "\nSpecify input (.com) files:"
+    read -re input_files
+    com_files=()
+    com_files+=($input_files)
 
-    if [ -z "${com_files}" ] || [ -z "${log_files}" ]; then 
-        echo -e "\nNo files were Specified!"
-        specify_files
-    else 
-        usr_verification
+    echo -e "\nSpecify output (.log) files to parse:"
+    read -re output_files
+    log_files=()
+    log_files+=($output_files)
+    check_files
+}
+
+check_files() {
+    if [[ "${#com_files[@]}" -eq "${#log_files[@]}" ]]; then
+        if [[ -z "${com_files[*]}" ]] || [[ -z "${log_files[*]}" ]]; then
+            echo -e "\nNo files were Specified. Please re-enter or press ctrl+c to exit."
+            man_inp
+        else
+            echo -e "\n${#com_files[@]} input and ${#log_files[@]} output files selected."
+            echo -e "\nInput files: ${com_files[*]}\n"
+            echo -e "Output files: ${log_files[*]}\n"
+            read -rp "Are these files correct? (y/n) " verify
+            usr_verification
+        fi
+    else
+        echo -e "\nInput and output files do not match. Please re-enter or press ctrl+c to exit:"
+        man_inp
     fi
 }
 
-usr_verification () {
-    if [ "$verify" == "y" ] || [ "$verify" == "yes" ]; then
+usr_verification() {
+    if [[ "$verify" == "y" ]] || [[ "$verify" == "yes" ]]; then
         parse_files
-    elif [ "$verify" == "n" ] || [ "$verify" == "no" ]; then
-        echo; retry
+    elif [[ "$verify" == "n" ]] || [[ "$verify" == "no" ]]; then
+        man_inp
     else
         echo -e "\nNot a valid answer. Repeat your input or press ctrl+c to exit:"
         check_files
     fi
 }
 
-parse_files () {
+parse_files() {
     echo -e "\nparsing data from ${#log_files[@]} files..."
-    
-    until [ $(seq 1 ${#log_files[@]}) ]; do 
 
-    for 
+    enum_no=( $(seq 1 "${#com_files[@]}") )
 
-    for num com log in $com_files $log_files 
-        "log_parser.py $com $log -o .parsed_data_$num.txt"
+    for i in "${!com_files[@]}"; do
+        log_parser.py "-o.parsed_data_${enum_no[i]}.txt" "${com_files[i]}" "${log_files[i]}" | xargs printf "%s %s %s " 
+        echo
     done &&
-
-    echo -e "\nPopty ping!\n" || 
-    echo -e "\nThere was an issue with running 1 or more of the files. Check your input files to make sure there are no errors.
-    Otherwise, try reducing the number of ghost atoms per input file.\n"  # Change these lines
+        cowsay "Popty ping!" ||
+        cowsay "There was an issue with parsing one or more of the files :("
 }
+
+
+arg_inp "$@"
 
