@@ -9,7 +9,7 @@ import glob
 import sys
 
 
-class plotter:
+class Plotter:
 
     def __init__(self):
         self.x_values = []
@@ -119,7 +119,7 @@ class plotter:
 
 
 if __name__ == '__main__':
-    p = plotter()
+    p = Plotter()
     p.cli_cmds()
     p.append_coors()
     p.check_arrays()
