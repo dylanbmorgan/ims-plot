@@ -16,6 +16,7 @@ class Plotter:
         self.y_values = []
         self.z_values = []
         self.z_axis_label = '\u03B4 / ppm'
+        self.title = 'Chemical Shift Contour Plot Calculated using NICS'
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Plots a contour plot to show isotropic NICS values from '
@@ -65,6 +66,7 @@ class Plotter:
                         if 'cBq' in line:
                             self.x_values.append(float(words[axis_x]))
                             self.y_values.append(float(words[axis_y]))
+
                         elif 'iBq' in line:
                             self.z_values.append(float(words[2]))
 
@@ -86,7 +88,8 @@ class Plotter:
             sys.exit()
 
         if self.args.shielding is True:
-            self.z_axis_label = 'Isotropic Magnetic Shielding Tensor / ppm'
+            self.z_axis_label = 'Isotropic Magnetic Shielding Tensor'
+            self.title = 'Isotropic NICS Contour Plot'
         else:
             for chg_sign, num in enumerate(self.z_values):
                 self.z_values[chg_sign] = num * -1
@@ -109,8 +112,20 @@ class Plotter:
         z = self.z_values
 
         try:
-            plt.tricontourf(x, y, z)
-            # plt.clabel(cp)
+            # data
+            fig, ax = plt.subplots(1, 1)
+            cp = ax.tricontourf(x, y, z)
+
+            # legend
+            cbar = fig.colorbar(cp)
+            cbar.set_label(self.z_axis_label)
+
+            # axes and title
+            ax.set_xlabel('Distance from x-origin (\u00c5)')
+            ax.set_ylabel('Distance from y-origin (\u00c5)')
+            ax.set_title(self.title)
+
+            # print
             plt.show()
 
         except (ValueError, IndexError) as error:
