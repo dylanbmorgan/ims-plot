@@ -121,8 +121,8 @@ class Plotter:
             cbar.set_label(self.z_axis_label)
 
             # axes and title
-            ax.set_xlabel('Distance from x-origin (\u00c5)')
-            ax.set_ylabel('Distance from y-origin (\u00c5)')
+            ax.set_xlabel('Distance from x-origin / \u00c5')
+            ax.set_ylabel('Distance from y-origin / \u00c5')
             ax.set_title(self.title)
 
             # print
