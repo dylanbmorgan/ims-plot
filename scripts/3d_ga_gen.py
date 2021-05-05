@@ -124,6 +124,9 @@ class InputGenerator:
                     for info in start:
                         newfiles.write(info)
 
+                        if 'nproc' in info:
+                            newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
+
                 newfiles.write('\n'.join(lines))
                 newfiles.write('\n ')
 
