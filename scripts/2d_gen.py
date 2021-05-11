@@ -14,17 +14,26 @@ class InputGenerator:
         self.bq_coors = []
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
+        def formatter(prog):
+            return argparse.HelpFormatter(prog, max_help_position=80)
+
+        parser = argparse.ArgumentParser(formatter_class=formatter,
+                                         description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('startfile', help='original file to copy')
         parser.add_argument('newfiles', help='new file(s) to write to (do not include the file extension)')
-        parser.add_argument('-v', '--verbose',
+        parser.add_argument('-c', '--chkfile',
                             action='store_true',
-                            help='print output of Bq coordinates to append to file')
+                            help='include a line in the input file(s) which will generate a Gassian .chk file in '
+                            'addition to a .log file (MUST ALREADY have a line specifying nprocs as per the Guassian '
+                            'manual)')
         parser.add_argument('-n', '--number',
                             type=int,
                             nargs='?',
                             default=25,
-                            help='specify the number of ghost atoms to write per file')
+                            help='specify the number of ghost atoms to write per file (default = 25)')
+        parser.add_argument('-v', '--verbose',
+                            action='store_true',
+                            help='print output of Bq coordinates to append to file')
 
         plane = parser.add_mutually_exclusive_group(required=True)
 
@@ -42,7 +51,7 @@ class InputGenerator:
 
     def gen_bq_coors(self):
         try:
-            start_pos = input('\nEnter start coordinates (x, y, z) for first ghost atom separated by spaces: ')
+            start_pos = input('\nEnter start coordinates (x, y, z) for the first ghost atom separated by spaces: ')
             end_pos = input('Enter end coordinates (x, y, z) for the last ghost atom separated by spaces: ')
             vec_space = input('Specify the 2 vector spacings separated by spaces: ')
 
@@ -55,30 +64,27 @@ class InputGenerator:
                 s_coor_2 = start[1]
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
-                other = start[2]
                 vec1 = numpy.array([1., 0., 0.])  # Always have to be 1
                 vec2 = numpy.array([0., 1., 0.])
-                const = numpy.array([0., 0., other])
+                const = numpy.array([0., 0., start[2]])
 
             elif self.args.xz_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[2]
                 e_coor_1 = end[0]
                 e_coor_2 = end[2]
-                other = start[1]
                 vec1 = numpy.array([1, 0., 0.])
                 vec2 = numpy.array([0., 0., 1])
-                const = numpy.array([0., other, 0.])
+                const = numpy.array([0., start[1], 0.])
 
             elif self.args.yz_plane is True:
                 s_coor_1 = start[1]
                 s_coor_2 = start[2]
                 e_coor_1 = end[1]
                 e_coor_2 = end[2]
-                other = start[0]
                 vec1 = numpy.array([0., 1, 0.])
                 vec2 = numpy.array([0., 0., 1])
-                const = numpy.array([other, 0., 0.])
+                const = numpy.array([start[0], 0., 0.])
             # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
 
             coors = []
@@ -127,12 +133,14 @@ class InputGenerator:
         for index, lines in enumerate(split_lines_gen(self.bq_coors)):
             with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
                 total_files.append(newfiles)
+                # TODO: add lines to remove last line of file if empty
+
                 with open(self.args.startfile) as start:
                     for info in start:
                         newfiles.write(info)
 
-                        # if 'nproc' in info:
-                        #    newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
+                        if self.args.chkfile is True and 'nproc' in info:
+                            newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
 
                 newfiles.write('\n'.join(lines))
                 newfiles.write('\n ')
