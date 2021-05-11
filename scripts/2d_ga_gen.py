@@ -9,16 +9,14 @@ import argparse
 
 
 class InputGenerator:
+
     def __init__(self):
         self.bq_coors = []
-        # self.all_bqs = []
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(
-            description='Generates Bq atoms for Gaussian input files in 2D')
+        parser = argparse.ArgumentParser(description='Generates Bq atoms for Gaussian input files in 2D')
         parser.add_argument('startfile', help='original file to copy')
-        parser.add_argument('newfiles',
-                            help='new file(s) to write to (do not include the file extension)')
+        parser.add_argument('newfiles', help='new file(s) to write to (do not include the file extension)')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
@@ -27,12 +25,6 @@ class InputGenerator:
                             nargs='?',
                             default=25,
                             help='specify the number of ghost atoms to write per file')
-        '''
-        TODO: Integrate the following:
-        parser.add_argument('-c', '--connectivity',
-                            action='store_true',
-                            help='Include information for ghost atoms as part of geom=connectivity if this is to be'
-                            'used') '''
 
         plane = parser.add_mutually_exclusive_group(required=True)
 
@@ -64,7 +56,7 @@ class InputGenerator:
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
                 other = start[2]
-                vec1 = numpy.array([1., 0., 0.])  # Always has to be 1
+                vec1 = numpy.array([1., 0., 0.])  # Always have to be 1
                 vec2 = numpy.array([0., 1., 0.])
                 const = numpy.array([0., 0., other])
 
@@ -102,8 +94,8 @@ class InputGenerator:
 
             if self.args.verbose is True:
                 print('\nOutput:\n')
-                print(*self.bq_coors, sep='\n')
-                print(f'\nTotal number of ghost atoms: {len(self.bq_coors)}')  # Print coors in column format
+                print(*self.bq_coors, sep='\n')  # Print coors in column format
+                print(f'\nTotal number of ghost atoms: {len(self.bq_coors)}')
 
         except (IndexError, ValueError, TypeError) as error:
             print('\nThere was an error in interpreting your input:')
@@ -112,54 +104,18 @@ class InputGenerator:
             self.bq_coors.clear()
             self.gen_bq_coors()
 
-    def check_1(self):
+    def check(self):
         cont = input('\nProceed? (y/n) ')
 
         if cont.lower() == 'y' or cont.lower() == 'yes':
             pass
         elif cont.lower() == 'n' or cont.lower() == 'no':
             self.bq_coors.clear()
-            # self.all_bqs.clear()
             self.gen_bq_coors()
-            ig.check_1()
+            ig.check()
         else:
             print('\nNot a valid answer')
-            ig.check_1()
-
-    def enumerate_geom(self):
-        try:
-            index = 0
-            index = int(input('\nSpecify the number of non-Bq atoms to be defined in geom=connectivity: '))
-
-        except (IndexError, ValueError) as error:
-            print('\nThere was an error in interpreting your input:')
-            print(error)
-            print('\nPlease try again (or press ctrl+c to exit):')
-            self.enumerate_geom()
-
-        for line in self.bq_coors:
-            index += 1
-            self.all_bqs.append(index)
-            # Auto generates atoms for geom=connectivity
-            # Tells Gaussian not to form bonds between Bqs
-
-        # TODO: Remove the last nums from the list specified by the usr
-
-        if self.args.verbose is True:
-            print()
-            print(*self.all_bqs, sep='\n')  # Print
-
-    def check_2(self):
-        cont = input('\nProceed? (y/n) ')
-
-        if cont.lower() == 'y' or cont.lower() == 'yes':
-            pass
-        elif cont.lower() == 'n' or cont.lower() == 'no':
-            self.enumerate_geom()
-            ig.check_2()
-        else:
-            print('\nNot a valid answer')
-            ig.check_2()
+            ig.check()
 
     def write_files(self):
         def split_lines_gen(lines):
@@ -169,25 +125,24 @@ class InputGenerator:
         total_files = []
 
         for index, lines in enumerate(split_lines_gen(self.bq_coors)):
-            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com',
-                      'w+') as newfiles:
+            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
                 total_files.append(newfiles)
                 with open(self.args.startfile) as start:
                     for info in start:
                         newfiles.write(info)
 
+                        # if 'nproc' in info:
+                        #    newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
+
                 newfiles.write('\n'.join(lines))
                 newfiles.write('\n ')
 
-        print(f'\nTask completed successfully!\n{len(total_files)} new files were created')
-        # print('Remember to fill in the geom=connectivity information in the generated file')
+        print(f'\nTask completed successfully!\n{len(total_files)} new files were created.')
 
 
 if __name__ == '__main__':
     ig = InputGenerator()
     ig.cli_cmds()
     ig.gen_bq_coors()
-    ig.check_1()
-    # ig.enumerate_geom()
-    # ig.check_2()
+    ig.check()
     ig.write_files()

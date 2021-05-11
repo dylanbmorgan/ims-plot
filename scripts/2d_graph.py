@@ -9,13 +9,14 @@ import glob
 import sys
 
 
-class plotter:
+class Plotter:
 
     def __init__(self):
         self.x_values = []
         self.y_values = []
         self.z_values = []
         self.z_axis_label = '\u03B4 / ppm'
+        self.title = 'Chemical Shift Contour Plot Calculated using NICS'
 
     def cli_cmds(self):
         parser = argparse.ArgumentParser(description='Plots a contour plot to show isotropic NICS values from '
@@ -32,18 +33,22 @@ class plotter:
                                 action='store_true',
                                 help='specify the plane the ghost atoms are plotted in as the xz-plane')
 
-        parser.add_argument('-sh', '--shielding',
+        parser.add_argument('-s', '--shielding',
                             action='store_true',
                             help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
+        parser.add_argument('-v', '--verbose',
+                            action='store_true',
+                            help='print the values of the x and y axes of the plot')
         parser.add_argument('-f', '--filename',
                             nargs='?',
                             default=glob.glob('.parsed_data*.txt'),
                             # ^^ Might not work if a different file is specified other than default
                             help='if a custom file name was given for the parsed log data, use this flag to '
                             'specify the name of that file')
-        parser.add_argument('-v', '--verbose',
-                            action='store_true',
-                            help='print the values of the x and y axes of the plot')
+        parser.add_argument('-l', '--levels',
+                            nargs=1,
+                            type=int,
+                            help='Specify the total number of contours in the final plot')
         self.args = parser.parse_args()
 
     def append_coors(self):
@@ -65,6 +70,7 @@ class plotter:
                         if 'cBq' in line:
                             self.x_values.append(float(words[axis_x]))
                             self.y_values.append(float(words[axis_y]))
+
                         elif 'iBq' in line:
                             self.z_values.append(float(words[2]))
 
@@ -86,7 +92,8 @@ class plotter:
             sys.exit()
 
         if self.args.shielding is True:
-            self.z_axis_label = 'Isotropic Magnetic Shielding Tensor / ppm'
+            self.z_axis_label = 'Isotropic Magnetic Shielding Tensor'
+            self.title = 'Isotropic NICS Contour Plot'
         else:
             for chg_sign, num in enumerate(self.z_values):
                 self.z_values[chg_sign] = num * -1
@@ -109,8 +116,24 @@ class plotter:
         z = self.z_values
 
         try:
-            plt.tricontourf(x, y, z)
-            # plt.clabel(cp)
+            # data
+            fig, ax = plt.subplots(1, 1)
+
+            if self.args.levels is True:
+                cp = ax.tricontourf(x, y, z, levels=self.args.levels)  # Sort this out
+            else:
+                cp = ax.tricontourf(x, y, z)
+
+            # legend
+            cbar = fig.colorbar(cp)
+            cbar.set_label(self.z_axis_label)
+
+            # axes and title
+            ax.set_xlabel('Distance from x-origin / \u00c5')
+            ax.set_ylabel('Distance from y-origin / \u00c5')
+            ax.set_title(self.title)
+
+            # print
             plt.show()
 
         except (ValueError, IndexError) as error:
@@ -119,7 +142,7 @@ class plotter:
 
 
 if __name__ == '__main__':
-    p = plotter()
+    p = Plotter()
     p.cli_cmds()
     p.append_coors()
     p.check_arrays()
