@@ -19,8 +19,29 @@ class Plotter:
         self.title = 'Chemical Shift Contour Plot Calculated using NICS'
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(description='Plots a contour plot to show isotropic NICS values from '
-                                         'parsed Gaussian log file data')
+        def formatter(prog):
+            return argparse.HelpFormatter(prog, max_help_position=80)
+
+        parser = argparse.ArgumentParser(formatter_class=formatter,
+                                         description='Plots a contour plot to show isotropic NICS values from parsed'
+                                         ' Gaussian log file data')
+        parser.add_argument('-f', '--filename',
+                            nargs='?',
+                            default=glob.glob('.parsed_data*.txt'),
+                            # ^^ Might not work if a different file is specified other than default
+                            help='if a custom file name was given for the parsed log data, use this flag to '
+                            'specify the name of that file')
+        parser.add_argument('-l', '--levels',
+                            nargs='?',
+                            type=int,
+                            help='Specify the total number of contours in the final plot')
+        parser.add_argument('-s', '--shielding',
+                            action='store_true',
+                            help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
+        parser.add_argument('-v', '--verbose',
+                            action='store_true',
+                            help='print the values of the x and y axes of the plot')
+
         axis_group = parser.add_mutually_exclusive_group(required=True)
 
         axis_group.add_argument('-xy', '--xyplane',
@@ -33,22 +54,6 @@ class Plotter:
                                 action='store_true',
                                 help='specify the plane the ghost atoms are plotted in as the xz-plane')
 
-        parser.add_argument('-s', '--shielding',
-                            action='store_true',
-                            help='plot graph as a function of isotropic magnetic shielding instead of chemical shift')
-        parser.add_argument('-v', '--verbose',
-                            action='store_true',
-                            help='print the values of the x and y axes of the plot')
-        parser.add_argument('-f', '--filename',
-                            nargs='?',
-                            default=glob.glob('.parsed_data*.txt'),
-                            # ^^ Might not work if a different file is specified other than default
-                            help='if a custom file name was given for the parsed log data, use this flag to '
-                            'specify the name of that file')
-        parser.add_argument('-l', '--levels',
-                            nargs=1,
-                            type=int,
-                            help='Specify the total number of contours in the final plot')
         self.args = parser.parse_args()
 
     def append_coors(self):
@@ -117,16 +122,20 @@ class Plotter:
 
         try:
             # data
-            fig, ax = plt.subplots(1, 1)
+            fig, ax = plt.subplots()
 
-            if self.args.levels is True:
-                cp = ax.tricontourf(x, y, z, levels=self.args.levels)  # Sort this out
+            if self.args.levels is not None:
+                cp = ax.tricontourf(x, y, z, levels=self.args.levels)
             else:
                 cp = ax.tricontourf(x, y, z)
 
-            # legend
+            # labels
             cbar = fig.colorbar(cp)
             cbar.set_label(self.z_axis_label)
+            # ax.clabel(cp, inline=True, manual=False, fmt='%1.1f', fontsize=8)
+
+            # I think there is a bug with matplotlib, where if clabel is used with a filled tricontour (tricontourf),
+            # it messes up the rest of the plot. Uncomment the ax.clabel line to see what I mean.
 
             # axes and title
             ax.set_xlabel('Distance from x-origin / \u00c5')
