@@ -30,7 +30,8 @@ class InputGenerator:
                             type=int,
                             nargs='?',
                             default=25,
-                            help='specify the number of ghost atoms to write per file (default = 25)')
+                            help='specify the number of ghost atoms to write per file (default = 25). It might be '
+                            'useful to reduce this value if any of jobs fail when running on Gaussian')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
@@ -131,19 +132,26 @@ class InputGenerator:
         total_files = []
 
         for index, lines in enumerate(split_lines_gen(self.bq_coors)):
-            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
-                total_files.append(newfiles)
+            if index == 0:
+                file_location = f'./{str(self.args.newfiles)}.com'
+                # TODO: Prevent 1st file from being unnumbered if > 1 is created
+
+            else:
+                file_location = f'./{str(self.args.newfiles)}_{str(index + 1)}.com'
+
+            with open(file_location, 'w+') as newfile:
+                total_files.append(newfile)
                 # TODO: add lines to remove last line of file if empty
 
                 with open(self.args.startfile) as start:
                     for info in start:
-                        newfiles.write(info)
+                        newfile.write(info)
 
                         if self.args.chkfile is True and 'nproc' in info:
-                            newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
+                            newfile.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
 
-                newfiles.write('\n'.join(lines))
-                newfiles.write('\n ')
+                newfile.write('\n'.join(lines))
+                newfile.write('\n ')
 
         print(f'\nTask completed successfully!\n{len(total_files)} new files were created.')
 

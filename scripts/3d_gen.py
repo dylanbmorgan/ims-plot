@@ -21,11 +21,10 @@ class InputGenerator:
                                          description='Generates Bq atoms for Gaussian input files in 3D')
         parser.add_argument('startfile', help='original file to copy')
         parser.add_argument('newfiles', help='new file(s) to write to (do not include the file extension)')
-        parser.add_argument('-c', '--chkfile',
-                            action='store_true',
-                            help='include a line in the input file(s) which will generate a Gassian .chk file in '
-                            'addition to a .log file (MUST ALREADY have a line specifying nprocs as per the Guassian '
-                            'manual)')
+        parser.add_argument('-c', '--nochk',
+                            action='store_false',
+                            help='prevent lines being added to the input file(s) which would generate a Gaussian .chk '
+                            'file in addition to a .log file.')
         parser.add_argument('-d', '--define_spacings',
                             action='store_true',
                             help='generate ghost atoms by defining vector spacings rather than start and end '
@@ -34,7 +33,8 @@ class InputGenerator:
                             type=int,
                             nargs='?',
                             default=25,
-                            help='specify the number of ghost atoms to write per file (default = 25)')
+                            help='specify the number of ghost atoms to write per file (default = 25). It might be '
+                            'useful to reduce this value if any of jobs fail when running on Gaussian')
         parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of Bq coordinates to append to file')
@@ -121,19 +121,27 @@ class InputGenerator:
         total_files = []
 
         for index, lines in enumerate(split_lines_gen(self.bq_coors)):
-            with open(f'./{str(self.args.newfiles)}_{str(index + 1)}.com', 'w+') as newfiles:
-                total_files.append(newfiles)
-                # TODO: add liens to remove last line of file if empty
+            if index == 0:
+                file_location = f'./{str(self.args.newfiles)}.com'
+                # TODO: Prevent 1st file from being unnumbered if > 1 is created
+
+            else:
+                file_location = f'./{str(self.args.newfiles)}_{str(index + 1)}.com'
+
+            with open(file_location, 'w+') as newfile:
+                total_files.append(newfile)
+                # TODO: add lines to remove last line of file if empty
 
                 with open(self.args.startfile) as start:
                     for info in start:
-                        newfiles.write(info)
+                        newfile.write(info)
 
-                        if 'nproc' in info:
-                            newfiles.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
+                        if self.args.nochk is not True:
+                            if 'nproc' in info:
+                                newfile.write(f'%chk=./{str(self.args.newfiles)}_{str(index + 1)}.chk\n')
 
-                newfiles.write('\n'.join(lines))
-                newfiles.write('\n ')
+                newfile.write('\n'.join(lines))
+                newfile.write('\n ')
 
         print(f'\nTask completed successfully!\n{len(total_files)} new files were created.')
 
