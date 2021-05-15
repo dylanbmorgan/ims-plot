@@ -72,8 +72,8 @@ parse_files() {
     enum_no=( $(seq 1 "${#com_files[@]}") )
 
     for i in "${!com_files[@]}"; do
-        log_parser.py "-o.parsed_data_${enum_no[i]}.txt" "${com_files[i]}" "${log_files[i]}" | xargs printf "%s %s %s " 
-        echo
+        log_parser.py "-fparsed_data_${enum_no[i]}.txt" "${com_files[i]}" "${log_files[i]}" | xargs printf "%s %s %s " 
+        echo -e "\n"
     done &&
         cowsay "Popty ping!" ||
         cowsay "There was an issue with parsing one or more of the files :("

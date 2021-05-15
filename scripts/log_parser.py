@@ -19,13 +19,13 @@ class LogParser:
                                          f'{pathlib.Path().absolute()}/.parsed_data.txt')
         parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
         parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
-        parser.add_argument('-v', '--verbose',  # Is it possible to pipe this to less?
+        parser.add_argument('-f', '--filename',
+                            nargs='?',
+                            default='parsed_data.txt',
+                            help='specify custom name to save parsed log data file as')
+        parser.add_argument('-v', '--verbose',
                             action='store_true',
                             help='print output of file containing parsed data')
-        parser.add_argument('-o', '--output_filename',  # Change this so that it works (like the 2d_ga_gen script)
-                            nargs='?',
-                            default='.parsed_data.txt',
-                            help='specify custom name to save parsed log data file as')
         self.args = parser.parse_args()
 
     def read_coors(self):
@@ -66,7 +66,7 @@ class LogParser:
                     break
 
     def copy_iso_values(self):
-        with open(self.args.output_filename, 'w+') as copy:
+        with open(self.args.filename, 'w+') as copy:
             copy.write('Parsed log data from Gaussian log file\nDO NOT edit the contents of this file!\n')
             copy.write('\nGhost Atom Coordinates:\n')
             for count, line in enumerate(self.coors, 1):  # Numerically specifies Bq atom
@@ -84,12 +84,14 @@ class LogParser:
                     copy.write(line)
 
         if self.args.verbose is True:
-            with open(self.args.output_filename, 'r') as copy:
+            with open(self.args.filename, 'r') as copy:
                 contents = copy.read()
                 print(contents)
 
         print(f'\nFinished parsing data from files: {self.args.inpfile} & {self.args.outfile}')
-        print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.output_filename}')
+        print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.filename}\n')
+
+        # TODO: Automatically create new directory to save parsed data files into
 
 
 if __name__ == '__main__':
