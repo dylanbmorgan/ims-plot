@@ -3,9 +3,9 @@
 # Plots contour plot of isotropic NICS values from parsed file data
 # Author: Dylan Morgan
 
-import matplotlib.pyplot as plt
 import argparse
 import glob
+import matplotlib.pyplot as plt
 import sys
 
 
@@ -15,6 +15,8 @@ class Plotter:
         self.x_values = []
         self.y_values = []
         self.z_values = []
+        self.rounded_x = []
+        self.rounded_y = []
         self.z_axis_label = '\u03B4 / ppm'
         self.title = 'Chemical Shift Contour Plot Calculated using NICS'
 
@@ -26,8 +28,8 @@ class Plotter:
                                          description='Plots a contour plot to show isotropic NICS values from parsed'
                                          ' Gaussian log file data')
         parser.add_argument('-f', '--filename',
-                            nargs='?',
-                            default=glob.glob('.parsed_data*.txt'),
+                            nargs='*',
+                            default=glob.glob('parsed_data*.txt'),
                             # ^^ Might not work if a different file is specified other than default
                             help='if a custom file name was given for the parsed log data, use this flag to '
                             'specify the name of that file')
@@ -74,10 +76,12 @@ class Plotter:
                         words = line.split()
                         if 'cBq' in line:
                             self.x_values.append(float(words[axis_x]))
-                            self.y_values.append(float(words[axis_y]))
+                            self.rounded_x = [round(num, 3) for num in self.x_values]
+                            self.y_values.append(float(words[axis_y]))  # Bq coors
+                            self.rounded_y = [round(num, 3) for num in self.y_values]
 
                         elif 'iBq' in line:
-                            self.z_values.append(float(words[2]))
+                            self.z_values.append(float(words[2]))  # isotropic values
 
         except (FileNotFoundError, ValueError, IndexError) as error:
             print('\nThere was an issue with reading the parsed data:')
@@ -105,19 +109,19 @@ class Plotter:
 
     def draw_plot(self):
         if self.args.verbose is True:
-            self.x_values.insert(0, 'x-values')
-            self.y_values.insert(0, 'y-values')
+            self.rounded_x.insert(0, 'x-values')
+            self.rounded_y.insert(0, 'y-values')
             self.z_values.insert(0, 'z-values')
 
-            for x, y, z in zip(self.x_values, self.y_values, self.z_values):
+            for x, y, z in zip(self.rounded_x, self.rounded_y, self.z_values):
                 print(x, y, z)  # Prints arrays as columns
 
-            del self.x_values[0]
-            del self.y_values[0]
+            del self.rounded_x[0]
+            del self.rounded_y[0]
             del self.z_values[0]
 
-        x = self.x_values
-        y = self.y_values
+        x = self.rounded_x
+        y = self.rounded_y
         z = self.z_values
 
         try:
@@ -131,16 +135,17 @@ class Plotter:
 
             # labels
             cbar = fig.colorbar(cp)
-            cbar.set_label(self.z_axis_label)
+            cbar.set_label(self.z_axis_label, fontsize=14)
             # ax.clabel(cp, inline=True, manual=False, fmt='%1.1f', fontsize=8)
 
             # I think there is a bug with matplotlib, where if clabel is used with a filled tricontour (tricontourf),
             # it messes up the rest of the plot. Uncomment the ax.clabel line to see what I mean.
 
             # axes and title
-            ax.set_xlabel('Distance from x-origin / \u00c5')
-            ax.set_ylabel('Distance from y-origin / \u00c5')
-            ax.set_title(self.title)
+            ax.set_xlabel('Distance from x-origin / \u00c5', fontsize=16)
+            ax.set_ylabel('Distance from y-origin / \u00c5', fontsize=16)
+            ax.set_title(self.title, fontsize=20)
+            ax.tick_params(labelsize=12)
 
             # print
             plt.show()
