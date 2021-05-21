@@ -9,7 +9,7 @@ arg_inp() {
     if [[ $# -eq 0 ]]; then
         man_inp
     else
-        echo -e "\n$# files selected: ${arg_files[*]}"
+        echo -e "\n$# files selected:\n${arg_files[*]}"
         check_files
     fi
 }
@@ -26,8 +26,9 @@ man_inp() {
 check_files() {
     echo
     read -rp "Are these the correct files? (y/n) " verify
+    echo
 
-    for file in "${arg_files[@]}"; do 
+    for file in "${arg_files[@]}"; do
         if [[ -z "${arg_files[*]}" ]]; then
             echo -e "\nNo files were Specified!\n"
             man_inp
@@ -64,11 +65,10 @@ run_jobs() {
             echo "$value.com > $value.log completed successfully!" ||
             echo "There was an issue with running $value.com > $value.log"
     done &&
-        echo -e "\nPopty ping!\n" 
-    
+        echo -e "\nPopty ping!\n"
+
     exit 0
 }
 
 
 arg_inp "$@"
-

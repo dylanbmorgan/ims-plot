@@ -67,7 +67,7 @@ class LogParser:
 
     def copy_iso_values(self):
         with open(self.args.filename, 'w+') as copy:
-            copy.write('Parsed log data from Gaussian log file\nDO NOT edit the contents of this file!\n')
+            copy.write(f'Parsed data from {self.args.outfile}\nDO NOT edit the contents of this file!\n')
             copy.write('\nGhost Atom Coordinates:\n')
             for count, line in enumerate(self.coors, 1):  # Numerically specifies Bq atom
                 copy.write(str(f'{count}  cBq: {line}'))  # Labels coors as 'c'
@@ -90,8 +90,8 @@ class LogParser:
 
         print(f'\nFinished parsing data from files: {self.args.inpfile} & {self.args.outfile}')
         print(f'New file saved at location: {pathlib.Path().absolute()}/{self.args.filename}\n')
-
         # TODO: Automatically create new directory to save parsed data files into
+        # Also add the input_data.txt to this automatically
 
 
 if __name__ == '__main__':

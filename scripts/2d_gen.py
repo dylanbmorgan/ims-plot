@@ -4,7 +4,7 @@
 # Generates 2D array of Bq atoms for Gaussian input files
 # Authors: Dylan Morgan & Dr Felix Plasser
 
-import numpy
+import numpy as np
 import argparse
 
 
@@ -56,42 +56,44 @@ class InputGenerator:
             end_pos = input('Enter end coordinates (x, y, z) for the last ghost atom separated by spaces: ')
             vec_space = input('Specify the 2 vector spacings separated by spaces: ')
 
-            start = numpy.array(start_pos.split(), float)
-            end = numpy.array(end_pos.split(), float)
-            vs = numpy.array(vec_space.split(), float)
+            start = np.array(start_pos.split(), float)
+            end = np.array(end_pos.split(), float)
+            vs = np.array(vec_space.split(), float)
 
             if self.args.xy_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[1]
                 e_coor_1 = end[0]
                 e_coor_2 = end[1]
-                vec1 = numpy.array([1., 0., 0.])  # Always have to be 1
-                vec2 = numpy.array([0., 1., 0.])
-                const = numpy.array([0., 0., start[2]])
+                vec1 = np.array([1., 0., 0.])  # Always have to be 1
+                vec2 = np.array([0., 1., 0.])
+                const = np.array([0., 0., start[2]])
 
             elif self.args.xz_plane is True:
                 s_coor_1 = start[0]
                 s_coor_2 = start[2]
                 e_coor_1 = end[0]
                 e_coor_2 = end[2]
-                vec1 = numpy.array([1, 0., 0.])
-                vec2 = numpy.array([0., 0., 1])
-                const = numpy.array([0., start[1], 0.])
+                vec1 = np.array([1, 0., 0.])
+                vec2 = np.array([0., 0., 1])
+                const = np.array([0., start[1], 0.])
 
             elif self.args.yz_plane is True:
                 s_coor_1 = start[1]
                 s_coor_2 = start[2]
                 e_coor_1 = end[1]
                 e_coor_2 = end[2]
-                vec1 = numpy.array([0., 1, 0.])
-                vec2 = numpy.array([0., 0., 1])
-                const = numpy.array([start[0], 0., 0.])
+                vec1 = np.array([0., 1, 0.])
+                vec2 = np.array([0., 0., 1])
+                const = np.array([start[0], 0., 0.])
             # vec spaces specified in different locations in variables depending on which plane arg is selected by usr
 
             coors = []
+            arr_x = np.arange(s_coor_1, e_coor_1 + vs[0], vs[0])
+            arr_y = np.arange(s_coor_2, e_coor_2 + vs[1], vs[1])
 
-            for i in numpy.arange(s_coor_1, e_coor_1 + vs[0], vs[0]):
-                for j in numpy.arange(s_coor_2, e_coor_2 + vs[1], vs[1]):
+            for i in arr_x:
+                for j in arr_y:
                     coors += [i * vec1 + j * vec2 + const]
                     # Auto generates all Bq coors based off usr start and end coors
                     # Auto defines no of Bqs based off usr vec spacings
@@ -101,8 +103,17 @@ class InputGenerator:
 
             if self.args.verbose is True:
                 print('\nOutput:\n')
-                print(*self.bq_coors, sep='\n')  # Print coors in column format
+                print(*self.bq_coors, sep='\n')
                 print(f'\nTotal number of ghost atoms: {len(self.bq_coors)}')
+                # Print coors in column format
+
+            x_len = len(arr_x)
+            y_len = len(arr_y)
+
+            with open('input_data.py', 'w') as gen_data:
+                gen_data.write(f'dim_x = {x_len}\ndim_y = {y_len}\n'
+                               f'min_x = {s_coor_1}\nmin_y = {s_coor_2}\n'
+                               f'step_x = {vs[0]}\nstep_y = {vs[1]}')
 
         except (IndexError, ValueError, TypeError) as error:
             print('\nThere was an error in interpreting your input:')
@@ -153,7 +164,7 @@ class InputGenerator:
                 newfile.write('\n'.join(lines))
                 newfile.write('\n ')
 
-        print(f'\nTask completed successfully!\n{len(total_files)} new files were created.')
+        print(f'\nTask completed successfully!\n{len(total_files)} new file(s) were created.')
 
 
 if __name__ == '__main__':

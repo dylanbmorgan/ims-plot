@@ -159,7 +159,7 @@ class InputGenerator:
                 newfile.write('\n'.join(lines))
                 newfile.write('\n ')
 
-        print(f'\nTask completed successfully!\n{len(total_files)} new files were created.')
+        print(f'\nTask completed successfully!\n{len(total_files)} new file(s) were created.')
 
 
 if __name__ == '__main__':

@@ -77,7 +77,7 @@ class Plotter:
                             nonrounded_x.append(float(words[value]))  # Bq coors
 
                         elif 'iBq:' in line:
-                            self.y_values.append(float(words[2]))  # isotropic values
+                            self.y_values.append(float(words[2]))  # Isotropic values
 
                 self.x_values = [round(num, 3) for num in nonrounded_x]
 
@@ -156,12 +156,13 @@ class Plotter:
             plt.xlabel('Distance from origin / \u212B', fontsize=16)
             plt.ylabel(self.y_axis_label, fontsize=16)
             plt.tick_params(axis='both', which='both', labelsize=12)
-            plt.title('Chemical Shift as a Function of Distance from the Origin Calculated Using NICS', fontsize=20)
+            # plt.title('Chemical Shift as a Function of Distance from the Origin Calculated Using NICS', fontsize=20)
             plt.show()
 
         except (ValueError, IndexError) as error:
             print('\nThere was an error with plotting the graph:')
             print(error)
+    # TODO: Compare with 2D and update this script accordingly
 
 
 if __name__ == '__main__':
