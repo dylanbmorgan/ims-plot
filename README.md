@@ -1,3 +1,5 @@
+# Visualisation of Aromaticity in Macrocycles
+
 Visualisation of macrocycles is important to enable greater understanding of
 how they work and their potential applications in battery electrodes and
 photovoltaic cells. Current methods of visualising aromaticity are not fit for
@@ -15,15 +17,13 @@ used for degradation-resistant electrodes in sodium ion batteries and
 chromophores in photovoltaic cells.<sup>4,6</sup>
 <br  />
 
-<img src="https://github.com/dylanbmorgan/
-visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/ACID_plan.png"
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/ACID_plan.png"
 width="300">
 
 *Figure 1*
 <br />
 
-<img src="https://github.com/dylanbmorgan/
-visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/NICS_plan.png"
+<img src="https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles/blob/main/png_files/NICS_plan.png"
 width="300">
 
 *Figure 2*
