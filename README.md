@@ -49,6 +49,50 @@ batteries and chromophores in photovoltaic cells.<sup>4,6</sup>
 <br  />
 
 
+# Prerequisites
+These instructions assume basic knowledge of the unix command line. 
+For an excellent tutorial of the command line, I would personally recommend this one by [Ryans Tutorials](https://ryanstutorials.net/linuxtutorial/)
+
+They are intended to be used with the Gaussian09 software...
+
+Additionally, this repository has only been tested on a system using the linux kernel. As it is exclusively written in python and bash, it should also work on MacOS, although the `$PATH` variables may differ slightly. I don't have a clue if it can be used with windows systems.
+<br />
+
+
+# Installation
+This is currently a simple collection of scripts, however will likely become a fullly installable program in future versions...
+
+I would advise creating a directory in your `$HOME` to execute the scripts from and to add this directory to your `$PATH`.
+To do so, paste the following into your terminal:
+
+~~~
+cd ~/
+mkdir bin 
+cd bin/
+git clone https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles.git
+~~~
+
+To add the directory to your `$PATH`:
+
+If you are using bash:
+~~~
+~~~
+For zsh users:
+~~~
+~~~
+For fish users:
+~~~
+echo 'export PATH="$HOME/bin/visualisation-of-aromaticity-in-macrocycles/scripts:$PATH"' >> ~/.config/fish/config.fish
+~~~
+
+If you are unsure which shell you are using, you can find out by executing the following:
+
+~~~
+echo $SHELL
+~~~
+<br />
+
+# Copyright
 Student: Dylan Morgan
 
 Supervisor: Dr Felix Plasser
