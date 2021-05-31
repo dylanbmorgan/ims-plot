@@ -108,7 +108,7 @@ class Plotter:
             for file in self.args.filename:
                 x_tmp = []
                 y_tmp = []
-                NICS_tmp = []
+                nics_tmp = []
 
                 for line in file:
                     words = line.split()
@@ -116,10 +116,10 @@ class Plotter:
                         x_tmp.append(float(words[axis_x]))
                         y_tmp.append(float(words[axis_y]))  # Put data from file into temp arrays
                     elif 'iBq' in line:
-                        NICS_tmp.append(float(words[2]))
+                        nics_tmp.append(float(words[2]))
 
                 # Put data into the global array at an appropriate position
-                for i, val in enumerate(NICS_tmp):
+                for i, val in enumerate(nics_tmp):
                     x_vals = round(x_tmp[i], 5)
                     y_vals = round(y_tmp[i], 5)  # Round to 5 dp
 
@@ -153,17 +153,9 @@ class Plotter:
                 self.nics_vals[chg_sign] = num * -1
 
         if self.args.verbose is True:
-            self.x_coors.insert(0, 'x-values')
-            self.y_coors.insert(0, 'y-values')
-            self.nics_vals.insert(0, 'z-values')
-
-            for x, y, z in zip(self.x_coors, self.y_coors, self.nics_vals):
-                print(x, y, z)  # Prints arrays as columns
-            # TODO: Format this better
-
-            del self.x_coors[0]
-            del self.y_coors[0]
-            del self.nics_vals[0]
+            print(f'\nx coordinates:\n{self.x_coors}')
+            print(f'\ny coordinates:\n{self.y_coors}')
+            print(f'\nNICS isotropic values:\n{self.nics_vals}')
 
         x = self.x_coors
         y = self.y_coors
