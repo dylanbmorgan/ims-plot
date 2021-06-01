@@ -85,7 +85,7 @@ your terminal:
 
 ```sh
 cd ~/
-git clone https://github.com/dylanbmorgan/ims-plot.git ~/bin
+git clone https://github.com/dylanbmorgan/ims-plot.git ~/bin/ims-plot
 ```
 
 To add the directory to your `$PATH`:
@@ -93,19 +93,19 @@ To add the directory to your `$PATH`:
 If you are using bash:
 
 ```sh
-
+echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.bash_profile
 ```
 
 For zsh users:
 
 ```sh
-
+echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.zshrc
 ```
 
 For fish users:
 
 ```sh
-echo 'export PATH="$HOME/bin/scripts:$PATH"' >> ~/.config/fish/config.fish
+echo 'export PATH="~/bin/ims-plot/scripts:$PATH"' >> ~/.config/fish/config.fish
 source ~/.config/fish/config.fish
 ```
 
