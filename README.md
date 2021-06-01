@@ -115,7 +115,7 @@ If you are unsure which shell you are using, you can find out by executing the
 following:
 
 ```sh
-echo $SHELL
+which $SHELL
 ```
 
 ## Usage
