@@ -1,4 +1,5 @@
-# Visualisation of Aromaticity in Macrocycles
+# IMS-Plot
+<!--TODO: update this description-->
 
 Visualisation of macrocycles is important to enable greater understanding of
 how they work and their potential applications in battery electrodes and
@@ -84,7 +85,7 @@ your terminal:
 
 ```sh
 cd ~/
-git clone https://github.com/dylanbmorgan/visualisation-of-aromaticity-in-macrocycles.git ~/bin
+git clone https://github.com/dylanbmorgan/ims-plot.git ~/bin
 ```
 
 To add the directory to your `$PATH`:
