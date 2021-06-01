@@ -86,7 +86,6 @@ your terminal:
 ```sh
 cd ~/
 git clone https://github.com/dylanbmorgan/ims-plot.git ~/bin/ims-plot
-source 
 ```
 
 To add the directory to your `$PATH`:
