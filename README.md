@@ -86,6 +86,7 @@ your terminal:
 ```sh
 cd ~/
 git clone https://github.com/dylanbmorgan/ims-plot.git ~/bin/ims-plot
+source 
 ```
 
 To add the directory to your `$PATH`:
@@ -94,12 +95,14 @@ If you are using bash:
 
 ```sh
 echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 For zsh users:
 
 ```sh
 echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 For fish users:
