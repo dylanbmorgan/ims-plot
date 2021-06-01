@@ -136,7 +136,7 @@ The following applies to the usage of all the scripts:
         the optimised structure.
         * All examples given here have been calculated using this level of
         theory.
-    * In Gaussian, this can be written as follows:
+    * In the Gaussian input file, this can be written as follows:
         * `# PBE1PBE/Def2SVP opt`
 1. Parse the information from the Gaussian output file to a new input file.
     * It is recommended to employ [Open Babel](http://openbabel.org/wiki/Main_Page)
@@ -144,7 +144,7 @@ The following applies to the usage of all the scripts:
 1. Check that the structure has optimised correctly
 1. Modify the new input file in the same way as the file used for the
    optimisation, with the exception of writing `nmr` rather than `opt`: 
-    * `#PBE1PBE/Def2SVP nmr`
+    * `# PBE1PBE/Def2SVP nmr`
 1. Ensure to ***remove*** the empty line at the end of the file.
 
 Depending on the desired dimensionaltiy of the final plot, the scripts differ
