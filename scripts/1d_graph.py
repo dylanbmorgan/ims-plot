@@ -173,7 +173,7 @@ class Plotter:
                 plt.title(self.args.title, fontsize=16)
 
             # Print
-            if self.arg.interactive is True:
+            if self.args.interactive is True:
                 plt.show()
             else:
                 plt.savefig(self.args.plot_name)
