@@ -93,21 +93,21 @@ To add the directory to your `$PATH`:
 If you are using bash:
 
 ```sh
-echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.bash_profile
+echo 'export PATH=$HOME/bin/ims-plot/scripts:$PATH' >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
 For zsh users:
 
 ```sh
-echo 'export PATH=~/bin/ims-plot/scripts:$PATH' >> ~/.zshrc
+echo 'export PATH=$HOME/bin/ims-plot/scripts:$PATH' >> ~/.zshrc
 source ~/.zshrc
 ```
 
 For fish users:
 
 ```sh
-echo 'export PATH="~/bin/ims-plot/scripts:$PATH"' >> ~/.config/fish/config.fish
+echo 'export PATH="$HOME/bin/ims-plot/scripts:$PATH"' >> ~/.config/fish/config.fish
 source ~/.config/fish/config.fish
 ```
 
