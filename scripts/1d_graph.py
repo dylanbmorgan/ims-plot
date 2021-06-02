@@ -132,15 +132,15 @@ class Plotter:
             print('\ny-axis:', *self.y_coors, sep=' ')
 
     def check_arrays(self):
-        if self.x_coors is None and self.nics_vals is None:
+        if self.x_coors is None and self.y_coors is None:
             print(f'\nError: {self.args.filename} are missing the lines containing cBq and iBq (ghost atom '
                   'coordinates and isotropic NICS values)')
             sys.exit()
-        elif self.x_coors is None or self.y_coors is None:
-            print(f'\nError: {self.args.filename} are missing the lines containing cBq (ghost atom coordinates)')
+        elif self.x_coors is None:
+            print(f'\nError: {self.args.filename} is/are missing the line(s) containing cBq (ghost atom coordinates)')
             sys.exit()
-        elif self.nics_vals is None:
-            print(f'\nError: {self.args.filename} are missing the lines containing iBq (isotropic NICS values)')
+        elif self.y_coors is None:
+            print(f'\nError: {self.args.filename} is/are missing the line(s) containing iBq (isotropic NICS values)')
             sys.exit()
 
     def draw_plot(self):
