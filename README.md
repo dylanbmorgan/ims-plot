@@ -245,7 +245,7 @@ mg09.sh xy*.com
 
 If you are accessing Gaussian through an `ssh` session, copy to the script to the
 machine hosting the `ssh` to `$HOME` (possible using `sshfs`), and add the 
-location of the script to the bash `$PATH`.
+location of the script to the shell `$PATH`.
 
 ### Parsing Output Files
 
