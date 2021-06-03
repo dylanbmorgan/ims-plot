@@ -5,6 +5,7 @@
 
 import argparse
 import pathlib
+import glob
 
 
 class LogParser:
@@ -15,13 +16,17 @@ class LogParser:
         self.tensors = []
 
     def cli_cmds(self):
-        parser = argparse.ArgumentParser(description='Parses information from Gaussian output file to '
+        def formatter(prog):
+            return argparse.HelpFormatter(prog, max_help_position=80)
+
+        parser = argparse.ArgumentParser(formatter_class=formatter,
+                                         description='Parses information from Gaussian output file to '
                                          f'{pathlib.Path().absolute()}/.parsed_data.txt')
         parser.add_argument('inpfile', help='file name of input (.com) Gaussian file')
         parser.add_argument('outfile', help='file name of output (.log) Gaussian file')
         parser.add_argument('-f', '--filename',
-                            nargs='?',
-                            default='parsed_data.txt',
+                            nargs='+',
+                            default=glob.glob('parsed_data*.txt'),
                             help='specify custom name to save parsed log data file as')
         parser.add_argument('-v', '--verbose',
                             action='store_true',

@@ -4,8 +4,8 @@
 # Generates 2D array of Bq atoms for Gaussian input files
 # Authors: Dylan Morgan & Dr Felix Plasser
 
-import numpy as np
 import argparse
+import numpy as np
 
 
 class InputGenerator:
@@ -110,7 +110,7 @@ class InputGenerator:
             x_len = len(arr_x)
             y_len = len(arr_y)
 
-            with open('input_data.py', 'w') as gen_data:
+            with open('input_data.txt', 'w') as gen_data:
                 gen_data.write(f'dim_x = {x_len}\ndim_y = {y_len}\n'
                                f'min_x = {s_coor_1}\nmin_y = {s_coor_2}\n'
                                f'step_x = {vs[0]}\nstep_y = {vs[1]}')

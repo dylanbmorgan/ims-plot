@@ -108,7 +108,7 @@ class Plotter:
             for file in self.args.filename:
                 x_tmp = []
                 y_tmp = []
-                NICS_tmp = []
+                nics_tmp = []
 
                 for line in file:
                     words = line.split()
@@ -116,10 +116,10 @@ class Plotter:
                         x_tmp.append(float(words[axis_x]))
                         y_tmp.append(float(words[axis_y]))  # Put data from file into temp arrays
                     elif 'iBq' in line:
-                        NICS_tmp.append(float(words[2]))
+                        nics_tmp.append(float(words[2]))
 
                 # Put data into the global array at an appropriate position
-                for i, val in enumerate(NICS_tmp):
+                for i, val in enumerate(nics_tmp):
                     x_vals = round(x_tmp[i], 5)
                     y_vals = round(y_tmp[i], 5)  # Round to 5 dp
 
@@ -146,24 +146,16 @@ class Plotter:
 
     def draw_plot(self):
         if self.args.shielding is True:
-            cb_label = 'Isotropic Magnetic Shielding'
+            cb_label = 'Isotropic Magnetic Shielding'  # Change axis label for shielding
         else:
             cb_label = '\u03B4 / ppm'
             for chg_sign, num in enumerate(self.nics_vals):
-                self.nics_vals[chg_sign] = num * -1
+                self.nics_vals[chg_sign] = num * -1  # Flip IMS sign to get to chemical shift
 
         if self.args.verbose is True:
-            self.x_coors.insert(0, 'x-values')
-            self.y_coors.insert(0, 'y-values')
-            self.nics_vals.insert(0, 'z-values')
-
-            for x, y, z in zip(self.x_coors, self.y_coors, self.nics_vals):
-                print(x, y, z)  # Prints arrays as columns
-            # TODO: Format this better
-
-            del self.x_coors[0]
-            del self.y_coors[0]
-            del self.nics_vals[0]
+            print(f'\nx coordinates:\n{self.x_coors}')
+            print(f'\ny coordinates:\n{self.y_coors}')
+            print(f'\nNICS isotropic values:\n{self.nics_vals}')
 
         x = self.x_coors
         y = self.y_coors
@@ -177,20 +169,20 @@ class Plotter:
                 min = -20
                 max = 20
 
-            # data
+            # Data
             fig, ax = plt.subplots()
 
-            if self.args.colours is True:
+            if self.args.colours is True:  # Different plot colours
                 map = plt.get_cmap('viridis')
             else:
                 map = plt.get_cmap('RdBu')
 
-            if self.args.levels is not None:
+            if self.args.levels is not None:  # Change no. of contours
                 cp = ax.contourf(x, y, z, levels=self.args.levels, vmin=min, vmax=max, cmap=map)
             else:
                 cp = ax.contourf(x, y, z, vmin=min, vmax=max, cmap=map)
 
-            # labels
+            # Labels
             cbar = fig.colorbar(cp)
             cbar.set_label(cb_label, fontsize=14)
             # ax.clabel(cp, inline=True, manual=False, fmt='%1.1f', fontsize=8)
@@ -199,14 +191,14 @@ class Plotter:
             # it messes up the rest of the plot. Uncomment the ax.clabel line to see what I mean.
             # It works with contour though
 
-            # axes and title
+            # Axes and title
             ax.set_xlabel('Distance from x-origin / \u00c5', fontsize=14)
             ax.set_ylabel('Distance from y-origin / \u00c5', fontsize=14)
             ax.tick_params(labelsize=12)
             if self.args.title is not None:
                 ax.set_title(self.args.title, fontsize=16)
 
-            # print
+            # Print
             if self.args.interactive is True:
                 plt.show()
             else:
