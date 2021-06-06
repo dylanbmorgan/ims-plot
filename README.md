@@ -1,4 +1,4 @@
-# IMS-Plot
+# IMS-plot
 <!--TODO: update this description-->
 
 Visualisation of macrocycles is important to enable greater understanding of
