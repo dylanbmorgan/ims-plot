@@ -10,7 +10,10 @@ These instructions assume basic knowledge of the unix command line. For an
 excellent tutorial of the command line, I would personally recommend [Ryans
 Tutorials](https://ryanstutorials.net/linuxtutorial/).
 
-They are intended to be used with the Gaussian09 software...
+They are intended to be used with the Gaussian09 software. They have not been 
+tested on other Gaussian versions, however there should be 
+compatibility between versions. These scripts will not work with other quantum 
+chemistry software. 
 
 Additionally, this repository has only been tested on a system using the linux
 kernel. As it is exclusively written in python and bash, it should also work on
