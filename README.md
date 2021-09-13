@@ -4,6 +4,14 @@ For literature on the topic, here is a [review](https://github.com/dylanbmorgan/
 
 For a journal-style report on the use of ims-plot, see [here](https://github.com/dylanbmorgan/ims-plot/blob/main/literature/final_report.pdf)
 
+## ATTENTION
+I am not currently developing this any further. This may change in the future 
+but I feel like this is unlikely as my time will be spend working on my PhD. If 
+you happen to stumble accross this and have any questions about its use, feel 
+free to drop me an email and I will be happy to assist. 
+
+Dylan 
+
 ## Prerequisites & Dependencies
 
 These instructions assume basic knowledge of the unix command line. For an
