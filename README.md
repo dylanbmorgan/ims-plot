@@ -4,13 +4,13 @@ For literature on the topic, here is a [review](https://github.com/dylanbmorgan/
 
 For a journal-style report on the use of ims-plot, see [here](https://github.com/dylanbmorgan/ims-plot/blob/main/literature/final_report.pdf)
 
-## ATTENTION
-I am not currently developing this any further. This may change in the future 
-but I feel like this is unlikely as my time will be spend working on my PhD. If 
-you happen to stumble accross this and have any questions about its use, feel 
-free to drop me an email and I will be happy to assist. 
+<!-- ## ATTENTION -->
+<!-- I am not currently developing this any further. This may change in the future  -->
+<!-- but I feel like this is unlikely as my time will be spend working on my PhD. If  -->
+<!-- you happen to stumble accross this and have any questions about its use, feel  -->
+<!-- free to drop me an email and I will be happy to assist.  -->
 
-Dylan 
+<!-- Dylan  -->
 
 ## Prerequisites & Dependencies
 
@@ -177,14 +177,10 @@ To learn how to run jobs and parse these output files, see
 [Running Multiple Jobs](#running-multiple-jobs), and [Parsing Output
 Files](#parsing-output-files).
 
+TODO document 2D and graphing script 
 ##### Graphing Script
 
 ### 2D
-
-### 3D
-
-Currently, the 3D scripts are still in active development. When completed, they
-will be documented here.
 
 ### Running Multiple Jobs
 
