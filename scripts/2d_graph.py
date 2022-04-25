@@ -4,7 +4,6 @@
 # Authors: Dylan Morgan & Dr Felix Plasser
 
 import argparse
-# import glob
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -24,11 +23,12 @@ class Plotter:
         parser = argparse.ArgumentParser(formatter_class=formatter,
                                          description='Plots a contour plot to show isotropic NICS values from parsed'
                                          ' Gaussian log file data')
+
         parser.add_argument('-c', '--colours',
                             action='store_true',
                             help='use an alternative colourscheme for the IMS plot')
         parser.add_argument('-f', '--filename',
-                            # default=glob.glob('parsed_data*.txt'),
+                            default='parsed_data.txt',
                             nargs='+',
                             type=argparse.FileType('r'),
                             help='if a custom file name was given for the parsed log data, use this flag to '

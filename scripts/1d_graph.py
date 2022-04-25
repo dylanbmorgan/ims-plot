@@ -4,7 +4,6 @@
 # Author: Dylan Morgan
 
 import argparse
-# import glob
 import matplotlib.pyplot as plt
 import sys
 
@@ -20,11 +19,12 @@ class Plotter:
             return argparse.HelpFormatter(prog, max_help_position=80)
 
         parser = argparse.ArgumentParser(formatter_class=formatter,
-                                         description='Plots a graph to show isotropic NICS values from parsed '
-                                         'Gaussian log file data')
+                                         description='Plots a graph to show isotropic NICS values from parsed'
+                                         ' Gaussian log file data')
+
         parser.add_argument('-f', '--filename',
-                            # default=glob.glob('parsed_data*.txt'),
                             nargs='+',
+                            default='parsed_data.txt',
                             type=argparse.FileType('r'),
                             help='if a custom file name was given for the parsed log data, use this flag to '
                             'specify the name of that file')
@@ -32,8 +32,7 @@ class Plotter:
                             action='store_true',
                             help='open an interactive version of the generated IMS plot')
         parser.add_argument('-m', '--multi_plot',
-                            # default=glob.glob('parsed_data*.txt'),
-                            nargs='+',
+                            nargs='?',
                             type=argparse.FileType('r'),
                             help='use this option with multiple parsed data files to plot multiple jobs on the '
                             'same graph (this currently does not work with jobs that have been split into multiple '
